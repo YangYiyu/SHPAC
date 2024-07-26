@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XpathConfig</title>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/themes/gray/easyui.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/themes/icon.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/themes/color.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/default.css') }}">
+	<script type="text/javascript" src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='js/jquery.easyui.min.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='js/locale/easyui-lang-zh_CN.js') }}"></script>
+</head>
+<body class="easyui-layout" style="width:100%;height:100%;margin:0px;padding:0px;">
+    <div region="north" split="true" title="capability" style="height:40%;">
+        <table id="attribute" class="easyui-datagrid" title="" style="width:100%;height:100%;" data-options="rownumbers:true,singleSelect:true,toolbar:'#ctb',pagination:true">
+            <thead>
+                <tr>
+                    <th data-options="field:'id',width:120,hidden:true">id</th>
+                    <th data-options="field:'platform',width:120,align:'center'">platform</th>
+                    <th data-options="field:'package',width:200,align:'center'">package</th>
+                    <th data-options="field:'activity',width:200,align:'center'">activity</th>
+                    <th data-options="field:'device',width:120,align:'center'">device</th>
+                    <th data-options="field:'capability',width:180,align:'center'">capability</th>
+                    <th data-options="field:'attribute',width:180,align:'center'">attribute</th>
+                </tr>
+            </thead>
+        </table>
+        <div id="ctb" style="padding:2px 5px;">
+            <div>
+                platform:&nbsp;<input class="easyui-combobox" id="platformS" style="width:100px;">
+                device:&nbsp;<input class="easyui-combobox" id="deviceS" style="width:100px;">
+                capability:&nbsp;<input class="easyui-combobox" id="capabilityS" style="width:100px;">
+                <span style="padding-left: 10px;"></span>
+                <a href="#" class="easyui-linkbutton c4" iconCls="icon-search" onclick="doSearch()" style="width:80px;">Search</a>
+            </div>
+        </div>
+    </div>
+    <div region="center" split="true" collapsible=false title="click list" style="height:60%;">
+        <table id="view" class="easyui-datagrid" title="" style="width:100%;height:100%;" data-options="rownumbers:true,singleSelect:false,selectOnCheck:true,checkOnSelect:true,method:'post',toolbar:'#vtb'">
+            <thead>
+                <tr>
+                    <th field="ck" checkbox="true"></th>
+                    <th data-options="field:'id',width:120,hidden:true">id</th>
+                    <th data-options="field:'idx',width:80,align:'center'">index</th>
+                    <th data-options="field:'type',width:100,align:'center'">type</th>
+                    <th data-options="field:'xpath',width:2400,align:'left'">xpath</th>
+                    <th data-options="field:'attribute',width:180,hidden:true">attribute</th>
+                </tr>
+            </thead>
+        </table>
+        <div id="vtb" style="padding:2px 5px;">
+            <div>
+                <a href="#" class="easyui-linkbutton c4" iconCls="icon-record" onclick="doRecord()" style="width:80px;">Record</a>
+                <span style="padding-left: 10px;"></span>
+                <a href="#" class="easyui-linkbutton" iconCls="icon-cancel" onclick="doDelete()">Delete</a>
+                <span style="padding-left: 10px;"></span>
+                <a href="#" class="easyui-linkbutton" iconCls="icon-replay" onclick="doReplay()">Replay</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="loadingDlg" class="easyui-dialog" style="width:200px;padding:10px;" data-options="" title="" closed="true" closable="false" modal="true">
+        <div style="text-align:center;"><img src="{{ url_for('static', filename='images/loading.gif') }}"></div>
+        <div style="text-align:center;">loading……</div>
+    </div>
+
+    <div id="waittingDlg" class="easyui-dialog" style="width:450px;padding:10px;" data-options="" title="" closed="true" closable="false" modal="true">
+        <div style="text-align:center;">The recording has stopped.</div>
+        <div style="text-align:center;"><img src="{{ url_for('static', filename='images/loading.gif') }}"></div>
+        <div style="text-align:center;">Now we'll replay your click sequence, please be aware of your phone's screen.</div>
+    </div>
+
+    <div id="clickingDlg" class="easyui-dialog" style="width:200px;padding:10px;" data-options="" title="" closed="true" closable="false" modal="true">
+        <div style="text-align:center;"><img src="{{ url_for('static', filename='images/loading.gif') }}"></div>
+        <div style="text-align:center;">clicking……</div>
+    </div>
+
+    <div id="recordList" class="easyui-dialog" title="Record Click View List" style="width:700px;padding:10px;"
+			data-options="
+				iconCls: 'icon-edit',
+				buttons: [{
+					text:'Save',
+					iconCls:'icon-ok',
+					handler:function(){
+						doSaveClickList();
+					}
+				}]
+			" closed="true" modal="true">
+        <table id="clicklist" class="easyui-datagrid" title="" style="width:100%;height:400px;"
+                data-options="singleSelect:false,selectOnCheck:true,checkOnSelect:true,toolbar:'#clicklistft',nowrap:false">
+            <thead>
+                <tr>
+                    <th field="ck" checkbox="true"></th>
+                    <th data-options="field:'xpath',width:650">view xpath</th>
+                </tr>
+            </thead>
+        </table>
+        <div id="clicklistft" style="padding:2px 5px;">
+            <a href="#" class="easyui-linkbutton" iconCls="icon-start" onclick="doStartRecord()">Start</a>
+            <span style="padding-left: 10px;"></span>
+            <a href="#" class="easyui-linkbutton" iconCls="icon-stop" onclick="doStopRecord()">Stop</a>
+            <span style="padding-left: 10px;"></span>
+            <a href="#" class="easyui-linkbutton" iconCls="icon-remove" onclick="doDeleteRecord()">Remove</a>
+            <span style="padding-left: 10px;"></span>
+            <a href="#" class="easyui-linkbutton" iconCls="icon-replay" onclick="doReplayRecord()">Replay</a>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        function doSearch() {
+            $('#attribute').datagrid({
+                url: 'getAllAttributeDatagrid',
+                method: 'POST',
+                queryParams: {
+                    capability: $('#capabilityS').textbox('getValue')
+                }
+            });
+        }
+        function doRecord() {
+            var attri = $('#attribute').datagrid('getSelected');
+            if(attri) {
+                $('#recordList').dialog('open');
+            }
+            else {
+                $.messager.alert('hint','Please select one capability!','info');
+            }
+        }
+        function doStartRecord() {
+            var attri = $('#attribute').datagrid('getSelected');
+            var rl = $('#clicklist').datagrid('getData')["total"];
+            if(rl!=0) {
+                $.messager.confirm('confirm', 'Do you want to overwrite the existed record?', function (r) {
+                    if(r) {
+                        $('#clicklist').datagrid('loadData', []);
+                        $.post('startRecord',{package:attri.package,activity:attri.activity},function(data,status){
+                            if(data=='success') {
+                                $.messager.alert('hint', 'The record is beginning, you can trigger the view now.', 'info');
+                            }
+                        });
+                    }
+                });
+            }
+            else {
+                $.post('startRecord',{package:attri.package,activity:attri.activity},function(data,status){
+                    if(data=='success') {
+                        $.messager.alert('hint', 'The record is beginning, you can trigger the view now.', 'info');
+                    }
+                });
+            }
+        }
+        function doStopRecord() {
+            $.post('stopRecord',{},function(data,status){
+                if(data=='success') {
+                    $('#waittingDlg').dialog('open');
+                    $.post('replayRecord',{},function(data,status){
+                        if(data && data!='failed') {
+                            $('#waittingDlg').dialog('close');
+                            $.messager.confirm('confirm', 'Are the click sequence consistent with your previous operations?', function (r) {
+                                if (r) {
+                                    $('#clicklist').datagrid('loadData', data);
+                                }
+                                else {
+                                    $.messager.alert('hint', 'You may try this record again.', 'info');
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+        }
+        function doDelete() {
+            var rows = $('#view').datagrid('getSelections');
+            if (rows.length>0) {
+                $.messager.confirm('confirm', 'Do you want to delete these records?', function (r) {
+                    if(r) {
+                        var ids = "";
+                        rows.forEach(function(r){
+                            ids += r["id"]+",";
+                        });
+                        $.post('deleteViewBatch',{ids:ids},function(data,status){
+                            if(data && data=='success') {
+                                $('#view').datagrid('reload');
+                            }
+                        });
+                    }
+                });
+            }
+            else {
+                $.messager.alert('hint','Please select one record at least!','info');
+            }
+        }
+        function doDeleteRecord() {
+            var rows = $('#clicklist').datagrid('getSelections');
+            if(rows.length == 0) {
+                $.messager.alert('hint','Please select one record at least!','info');
+            }
+            if (rows.length>0) {
+                rows.forEach(function(r){
+                    $('#clicklist').datagrid('deleteRow', $('#clicklist').datagrid('getRowIndex',r)); 
+                });
+            }
+        }
+        function doReplay() {
+            var rows = $('#view').datagrid('getSelections');
+            if(rows.length>0) {
+                $('#clickingDlg').dialog('open');
+                var ids = "";
+                rows.forEach(function(r){
+                    ids += r["id"]+",";
+                });
+                var attri = $('#attribute').datagrid('getSelected');
+                $.post('clickXpathByIds',{ids:ids,platform:attri.platform},function(data,status){
+                    $('#clickingDlg').dialog('close');
+                    if(data && data=='success') {
+                        $.messager.alert('hint','Replaying completed!','info');
+                    }
+                });
+            }
+        }
+        function doReplayRecord() {
+            var rows = $('#clicklist').datagrid('getSelections');
+            if(rows.length>0) {
+                $('#clickingDlg').dialog('open');
+                var attri = $('#attribute').datagrid('getSelected');
+                $.post('clickXpath',{xpaths:JSON.stringify(rows),platform:attri.platform},function(data,status){
+                    $('#clickingDlg').dialog('close');
+                    if(data && data=='success') {
+                        $.messager.alert('hint','Replaying completed!','info');
+                    }
+                });
+            }
+        }
+        function doSaveClickList() {
+            var attri = $('#attribute').datagrid('getSelected');
+            if(attri) {
+                var attri_id = attri["id"];
+                var rows = $('#clicklist').datagrid('getData')['rows'];
+                if(rows.length>0) {
+                    $('#loadingDlg').dialog('open');
+                    $.post('saveClickView',{attriid:attri_id,xpaths:JSON.stringify(rows)},function(data,status){
+                        if(data && data=='success') {
+                            $('#loadingDlg').dialog('close');
+                            $('#recordList').dialog('close');
+                            $('#view').datagrid({
+                                url: 'getAllView',
+                                method: 'POST',
+                                queryParams: {
+                                    attriid: attri_id
+                                }
+                            });
+                        }
+                    });
+                }
+            }
+            else {
+                $.messager.alert('hint','Please select one attribute!','info');
+            }
+        }
+
+        $(document).ready(function(){
+            $("#platformS").combobox({
+                editable: false,
+                panelHeight: 'auto',
+				valueField: 'id',
+    			textField: 'name',
+    			url: 'getAllPlatformJson',
+                onClick: function(item){
+                    $("#deviceS").combobox({
+                        editable: false,
+                        panelHeight: 'auto',
+                        valueField: 'id',
+                        textField: 'name',
+                        url: 'getAllDeviceJson?platform='+item.id,
+                        onClick: function(item){
+                            $("#capabilityS").combobox({
+                                editable: false,
+                                panelHeight: 'auto',
+                                valueField: 'id',
+                                textField: 'name',
+                                url: 'getAllCapabilityJson?device='+item.id
+                            })
+                        }
+                    })
+                }
+            });
+            $('#attribute').datagrid({
+            	onClickRow: function(index, row) {
+                    var attri_id = row["id"];
+            		$('#view').datagrid({
+                        url: 'getAllView',
+                        method: 'POST',
+                        queryParams: {
+                            attriid: attri_id
+                        }
+                    });
+            	}
+            });
+        });
+    </script>
+</body>
+</html>

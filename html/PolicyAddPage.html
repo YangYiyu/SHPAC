@@ -1,0 +1,944 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AddPolicy</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/themes/metro/easyui.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/themes/mobile.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/themes/icon.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/themes/color.css') }}">
+	<script type="text/javascript" src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='js/jquery.easyui.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.easyui.mobile.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.color.js') }}"></script>
+    <style>
+        .m-list .m-list-group {
+            background-color: #c9c7c7;
+        }
+    </style>
+  </head>
+  <body>
+    <div id="main" class="easyui-navpanel">
+        <header>
+            <div class="m-toolbar">
+                <div class="m-title">{{ session.get("valid_user") }} Add Policy</div>
+                <div class="m-left">
+                    <a href="javascript:void(0)" class="easyui-linkbutton m-back" plain="true" outline="true" onclick="$.mobile.back()">back</a>
+                </div>
+            </div>
+        </header>
+        <div class="easyui-accordion" fit="true" border="false">
+            <div class="easyui-navpanel">
+                <form id="policyFormAdd" class="easyui-form" method="post" data-options="novalidate:true" style="width:100%;height:100%;">
+                    <table cellpadding="5" >
+                        <tr>
+                            <td>
+                                <span style="color:red;font-weight:bold;">*</span>Policy name:&nbsp;&nbsp;
+                                <input class="easyui-textbox" id="nameAdd" name="name" data-options="required:true" style="width:100%;" prompt="input policy name"></input>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span style="color:red;font-weight:bold;">*</span>User:&nbsp;&nbsp;
+                                <input class="easyui-combobox" id="userAdd" name="user" data-options="required:true" style="width:100%;" prompt="select user"></input>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span style="color:red;font-weight:bold;">*</span>Platform:&nbsp;&nbsp;
+                                <input class="easyui-combobox" id="platformAdd" name="platform" panelHeight="auto" data-options="required:true" style="width:100%;" prompt="select platform"></input>
+                                <span style="color:red;font-weight:bold;">*</span>Device:&nbsp;&nbsp;
+                                <input class="easyui-combobox" id="deviceAdd" name="device" panelHeight="auto" data-options="required:true" style="width:100%;" prompt="select device"></input>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span style="color:red;font-weight:bold;">*</span>Capability:&nbsp;&nbsp;
+                                <input class="easyui-combobox" id="capabilityAdd" name="capability" panelHeight="auto" data-options="required:true" style="width:100%;" prompt="select platform"></input>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span style="color:red;font-weight:bold;">*</span>status_permit:&nbsp;&nbsp;
+                                <select id="statuspermitAdd" class="easyui-combobox" name="status_permit" panelHeight="auto" data-options="required:true,editable:false" style="width:30%;">
+                                    <option value="True">True</option>
+                                    <option value="False">False</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span style="color:red;font-weight:bold;">*</span>action_permit:&nbsp;&nbsp;
+                                <select id="actionpermitAdd" class="easyui-combobox" name="action_permit" panelHeight="auto" data-options="required:true,editable:false" style="width:30%;">
+                                    <option value="True">True</option>
+                                    <option value="False">False</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span style="color:red;font-weight:bold;">*</span>attri_permit:&nbsp;&nbsp;
+                                <table id="attripermitAdd" class="easyui-datagrid" title="" style="width:100%;height:150px;" data-options="singleSelect:true,toolbar:'#attripermittb'">
+                                    <thead>
+                                        <tr>
+                                            <th data-options="field:'attribute',width:150,align:'center'">attribute</th>
+                                            <th data-options="field:'value',width:200,align:'center'">value</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                                <div id="attripermittb" style="padding:2px 5px;">  
+                                    <a href="#" class="easyui-linkbutton" onclick="doAddAttriPermit()">add attri</a>
+                                    <a href="#" class="easyui-linkbutton" onclick="doRemoveAttriPermit()">remove attri</a>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span style="color:red;font-weight:bold;">*</span>time_condition:&nbsp;&nbsp;
+                                <table id="timeconditionAdd" class="easyui-datagrid" title="" style="width:100%;height:150px;" data-options="singleSelect:true,toolbar:'#timeconditiontb'">
+                                    <thead>
+                                        <tr>
+                                            <th data-options="field:'time',width:400,align:'center'">time interval</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                                <div id="timeconditiontb" style="padding:2px 5px;">  
+                                    <a href="#" class="easyui-linkbutton" onclick="doAddTimeCondition()">add time</a>
+                                    <a href="#" class="easyui-linkbutton" onclick="doRemoveTimeCondition()">remove time</a>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span style="color:red;font-weight:bold;">*</span>location_condition:&nbsp;&nbsp;
+                                <select id="prefixLocationCondition" class="easyui-combobox" panelHeight="auto" data-options="editable:false" style="width:20%;">
+                                    <option value="1">+</option>
+                                    <option value="2">-</option>
+                                </select>
+                                <select id="locationconditionAdd" class="easyui-combobox" panelHeight="auto" data-options="required:true,editable:false" style="width:20%;">
+                                    <option value="any">any</option>
+                                    <option value="home">home</option>
+                                    <option value="company">company</option>
+                                    <option value="school">school</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span style="color:red;font-weight:bold;">*</span>attri_condition:&nbsp;&nbsp;
+                                <table id="attriconditionAdd" class="easyui-datagrid" title="" style="width:100%;height:150px;" data-options="singleSelect:true,toolbar:'#attriconditiontb'">
+                                    <thead>
+                                        <tr>
+                                            <th data-options="field:'attribute',width:150,align:'center'">attribute</th>
+                                            <th data-options="field:'value',width:200,align:'center'">value</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                                <div id="attriconditiontb" style="padding:2px 5px;">  
+                                    <a href="#" class="easyui-linkbutton" onclick="doAddAttriCondition()">add attri</a>
+                                    <a href="#" class="easyui-linkbutton" onclick="doRemoveAttriCondition()">remove attri</a>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                    <a href="#" class="easyui-linkbutton c1" onclick="doCheck()" style="width:100%;">check</a>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="addAttriPermitDlg" class="easyui-dialog" title="Config attri_permit" style="width:100%;padding:10px;" data-options="
+            conCls: 'icon-new',
+            buttons: [
+                {
+                    text:'ok',
+                    iconCls:'icon-ok',
+                    handler:function(){
+                        doConfirmAttriPermit();
+                    }
+                },
+                {
+                    text:'cancel',
+                    iconCls:'icon-cancel',
+                    handler:function(){
+                        $('#addAttriPermitDlg').dialog('close');
+                    }
+                }
+            ]
+        " closed="true" modal="true">
+        <form id="addAttriPermitForm" class="easyui-form" method="post" data-options="novalidate:true">
+			<table cellpadding="5" >
+	    		<tr>
+	    		    <td>
+                        Attribute:&nbsp;&nbsp;
+                        <input class="easyui-combobox" id="attributePermitConfig" style="width:100%;" prompt="select attribute"></input>
+                    </td>
+                </tr>
+                <tr>
+	    		    <td>
+                        Type:&nbsp;&nbsp;
+                        <select id="typePermitConfig" class="easyui-combobox" panelHeight="auto" data-options="editable:false" style="width:40%;">
+                            <option value="1">Bool</option>
+                            <option value="2">Number</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr id="permitConfigBoolRow">
+	    		    <td>
+                        Value:&nbsp;&nbsp;
+                        <select id="boolValuePermitConfig" class="easyui-combobox" panelHeight="auto" data-options="editable:false" style="width:40%;">
+                            <option value="True">True</option>
+                            <option value="False">False</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr id="permitConfigNumberRow">
+	    		    <td>
+                        Prefix:&nbsp;&nbsp;
+                        <select id="prefixPermitConfig" class="easyui-combobox" panelHeight="auto" data-options="editable:false" style="width:15%;">
+                            <option value="1">+</option>
+                            <option value="2">-</option>
+                        </select>
+                        Value-interval:&nbsp;&nbsp;
+                        <input class="easyui-numberbox" id="numberValuePermitConfigBegin" style="width:15%;"></input>
+                        -
+                        <input class="easyui-numberbox" id="numberValuePermitConfigEnd" style="width:15%;"></input>
+                    </td>
+                </tr>
+	    	</table>
+        </form>
+    </div>
+
+    <div id="addTimeConditionDlg" class="easyui-dialog" title="Config time_condition" style="width:100%;padding:10px;" data-options="
+            conCls: 'icon-new',
+            buttons: [
+                {
+                    text:'ok',
+                    iconCls:'icon-ok',
+                    handler:function(){
+                        doConfirmTimeCondition();
+                    }
+                },
+                {
+                    text:'cancel',
+                    iconCls:'icon-cancel',
+                    handler:function(){
+                        $('#addTimeConditionDlg').dialog('close');
+                    }
+                }
+            ]
+        " closed="true" modal="true">
+        <form id="addTimeConditionForm" class="easyui-form" method="post" data-options="novalidate:true">
+			<table cellpadding="5" >
+	    		<tr>
+	    		    <td>
+                        Prefix:&nbsp;&nbsp;
+                        <select id="prefixTimeCondition" class="easyui-combobox" panelHeight="auto" data-options="editable:false" style="width:20%;">
+                            <option value="1">+</option>
+                            <option value="2">-</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+	    		    <td>
+                        Begin Time:&nbsp;&nbsp;
+                        <input class="easyui-datetimebox" id="timeConfigBegin" style="width:100%;" data-options="required:true,showSeconds:true,editable:false,formatter:datetimeFormatter,parser:datetimeParser"></input>
+                    </td>
+                </tr>
+                <tr>
+	    		    <td>
+                        End Time:&nbsp;&nbsp;
+                        <input class="easyui-datetimebox" id="timeConfigEnd" style="width:100%;" data-options="required:true,showSeconds:true,editable:false,formatter:datetimeFormatter,parser:datetimeParser"></input>
+                    </td>
+                </tr>
+	    	</table>
+        </form>
+    </div>
+
+    <div id="addAttriConditionDlg" class="easyui-dialog" title="Config attri_permit" style="width:100%;padding:10px;" data-options="
+            conCls: 'icon-new',
+            buttons: [
+                {
+                    text:'ok',
+                    iconCls:'icon-ok',
+                    handler:function(){
+                        doConfirmAttriCondition();
+                    }
+                },
+                {
+                    text:'cancel',
+                    iconCls:'icon-cancel',
+                    handler:function(){
+                        $('#addAttriConditionDlg').dialog('close');
+                    }
+                }
+            ]
+        " closed="true" modal="true">
+        <form id="addAttriConditionForm" class="easyui-form" method="post" data-options="novalidate:true">
+			<table cellpadding="5" >
+	    		<tr>
+	    		    <td>
+                        Attribute:&nbsp;&nbsp;
+                        <input class="easyui-combobox" id="attributeConditionConfig" style="width:100%;" prompt="select attribute"></input>
+                    </td>
+                </tr>
+                <tr>
+	    		    <td>
+                        Type:&nbsp;&nbsp;
+                        <select id="typeConditionConfig" class="easyui-combobox" panelHeight="auto" data-options="editable:false" style="width:40%;">
+                            <option value="1">Bool</option>
+                            <option value="2">Number</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr id="conditionConfigBoolRow">
+	    		    <td>
+                        Value:&nbsp;&nbsp;
+                        <select id="boolValueConditionConfig" class="easyui-combobox" panelHeight="auto" data-options="editable:false" style="width:40%;">
+                            <option value="True">True</option>
+                            <option value="False">False</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr id="conditionConfigNumberRow">
+	    		    <td>
+                        Prefix:&nbsp;&nbsp;
+                        <select id="prefixConditionConfig" class="easyui-combobox" panelHeight="auto" data-options="editable:false" style="width:15%;">
+                            <option value="1">+</option>
+                            <option value="2">-</option>
+                        </select>
+                        Value-interval:&nbsp;&nbsp;
+                        <input class="easyui-numberbox" id="numberValueConditionConfigBegin" style="width:15%;"></input>
+                        -
+                        <input class="easyui-numberbox" id="numberValueConditionConfigEnd" style="width:15%;"></input>
+                    </td>
+                </tr>
+	    	</table>
+        </form>
+    </div>
+        
+    <div id="showPolicyDlg" class="easyui-dialog" title="Show Policy" style="width:100%;padding:10px;" data-options="
+            conCls: 'icon-new',
+            buttons: [
+                {
+                    text:'close',
+                    iconCls:'icon-cancel',
+                    handler:function(){
+                        $('#showPolicyDlg').dialog('close');
+                    }
+                }
+            ]
+        " closed="true" modal="true">
+        <form id="showPolicyForm" class="easyui-form" method="post" data-options="novalidate:true">
+			<table style="width:100%;" border="1" cellspacing="0">
+	    		<tr>
+	    		    <td>
+                        id:&nbsp;&nbsp;
+                    </td>
+                    <td>
+                        <span id="policy_id"></span>
+                    </td>
+                </tr>
+                <tr>
+	    		    <td>
+                        name:&nbsp;&nbsp;
+                    </td>
+                    <td>
+                        <span id="policy_name"></span>
+                    </td>
+                </tr>
+                <tr>
+	    		    <td>
+                        user:&nbsp;&nbsp;
+                    </td>
+                    <td>
+                        <span id="policy_user"></span>
+                    </td>
+                </tr>
+                <tr>
+	    		    <td>
+                        device:&nbsp;&nbsp;
+                    </td>
+                    <td>
+                        <span id="policy_device"></span>
+                    </td>
+                </tr>
+                <tr>
+	    		    <td>
+                        capability:&nbsp;&nbsp;
+                    </td>
+                    <td>
+                        <span id="policy_capability"></span>
+                    </td>
+                </tr>
+                <tr>
+	    		    <td>
+                        status_permit:&nbsp;&nbsp;
+                    </td>
+                    <td>
+                        <span id="policy_status_permit"></span>
+                    </td>
+                </tr>
+                <tr>
+	    		    <td>
+                        action_permit:&nbsp;&nbsp;
+                    </td>
+                    <td>
+                        <span id="policy_action_permit"></span>
+                    </td>
+                </tr>
+                <tr>
+	    		    <td>
+                        attri_permit:&nbsp;&nbsp;
+                    </td>
+                    <td>
+                        <span id="policy_attri_permit"></span>
+                    </td>
+                </tr>
+                <tr>
+	    		    <td>
+                        time_condition:&nbsp;&nbsp;
+                    </td>
+                    <td>
+                        <span id="policy_time_condition"></span>
+                    </td>
+                </tr>
+                <tr>
+	    		    <td>
+                        location_condition:&nbsp;&nbsp;
+                    </td>
+                    <td>
+                        <span id="policy_location_condition"></span>
+                    </td>
+                </tr>
+                <tr>
+	    		    <td>
+                        attri_condition:&nbsp;&nbsp;
+                    </td>
+                    <td>
+                        <span id="policy_attri_condition"></span>
+                    </td>
+                </tr>
+                <tr>
+	    		    <td>
+                        submitter:&nbsp;&nbsp;
+                    </td>
+                    <td>
+                        <span id="policy_submitter"></span>
+                    </td>
+                </tr>
+                <tr>
+	    		    <td>
+                        level:&nbsp;&nbsp;
+                    </td>
+                    <td>
+                        <span id="policy_level"></span>
+                    </td>
+                </tr>
+                <tr>
+	    		    <td>
+                        state:&nbsp;&nbsp;
+                    </td>
+                    <td>
+                        <span id="policy_state"></span>
+                    </td>
+                </tr>
+	    	</table>
+        </form>
+    </div>
+
+    <div id="checkPolicyDlg" class="easyui-dialog" title="Check New Policy" style="width:100%;height:600px;padding:10px;" data-options="
+            conCls: 'icon-new',
+            buttons: [
+                {
+                    text:'close',
+                    iconCls:'icon-cancel',
+                    handler:function(){
+                        $('#checkPolicyDlg').dialog('close');
+                    }
+                }
+            ]
+        " closed="true" modal="true">
+        <form id="checkPolicyForm" class="easyui-form" method="post" data-options="novalidate:true">
+			<table cellpadding="5" >
+	    		<tr>
+	    		    <td>
+                        <table>
+                            <tr>
+                                <td style="text-align: center;"><img id="policy_relation_img" width=36></td>
+                                <td id="policy_relation"></td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+	    		    <td>
+                        Suggestion: <span id="handle" style="font-weight: bold;font-size: 15px;"></span>
+                    </td>
+                </tr>
+                <tr id="suggestion">
+	    		    <td>
+                        <div id="modified_policy" style="text-align: center;"></div>
+                    </td>
+                </tr>
+                <tr>
+	    		    <td id="actionBtn" style="text-align: center;"></td>
+                </tr>
+	    	</table>
+        </form>
+    </div>
+
+    <div id="loadingDlg" class="easyui-dialog" style="width:95%;padding:10px;" data-options="" title="" closed="true" closable="false" modal="true">
+        <div style="text-align:center;"><img src="{{ url_for('static', filename='images/loading.gif') }}"></div>
+        <div style="text-align:center;">waitting……</div>
+    </div>
+
+    <script type="text/javascript">
+        function datetimeFormatter(value){
+            var date = new Date(value);
+            var year = date.getFullYear();
+            var month = date.getMonth() + 1;
+            var day = date.getDate();
+            var hour = date.getHours();
+            var minutes = date.getMinutes();
+            var seconds = date.getSeconds();
+            month = month < 10 ? '0' + month : month;
+            day = day < 10 ? '0' + day : day;
+            hour = hour < 10 ? '0' + hour : hour;
+            minutes = minutes < 10 ? '0' + minutes : minutes;
+            seconds = seconds < 10 ? '0' + seconds : seconds;
+            
+            return year + "-" + month + "-" + day + " " + hour + ":" + minutes + ":" + seconds;
+        }
+        function datetimeParser(timestr){
+            var t = Date.parse(timestr);
+            if (!isNaN(t)){
+                return new Date(t);
+            } else {
+                return new Date();
+            }
+        }
+
+        function doShowById(id) {
+            if(id) {
+                $.post('getPolicy', {id: id}, function(data, status){
+                    if(data) {
+                        $("#showPolicyDlg").dialog("open");
+                        $("#policy_id").html(data.id);
+                        $("#policy_name").html(data.name);
+                        $("#policy_user").html(data.user);
+                        $("#policy_device").html(data.device);
+                        $("#policy_capability").html(data.capability);
+                        $("#policy_status_permit").html(data.status_permit.toString());
+                        $("#policy_action_permit").html(data.action_permit.toString());
+                        $("#policy_attri_permit").html(JSON.stringify(data.attri_permit));
+                        $("#policy_time_condition").html(JSON.stringify(data.time_condition));
+                        $("#policy_location_condition").html(data.location_condition);
+                        $("#policy_attri_condition").html(JSON.stringify(data.attri_condition));
+                        $("#policy_submitter").html(data.submitter);
+                        $("#policy_level").html(data.level);
+                        $("#policy_state").html(data.state);
+                    }
+                });
+            }
+        }
+        function doCheck() {
+	        $('#policyFormAdd').form('submit',{
+				url:'checkPolicyByRequest',
+				onSubmit:function(param){
+                    param.attri_permit = JSON.stringify($("#attripermitAdd").datagrid("getData"));
+                    param.time_condition = JSON.stringify($("#timeconditionAdd").datagrid("getData"));
+                    param.location_condition = ($("#prefixLocationCondition").combobox("getValue")=="2"?"-":"")+($("#locationconditionAdd").combobox("getValue"));
+                    param.attri_condition = JSON.stringify($("#attriconditionAdd").datagrid("getData"));
+
+					return $(this).form('enableValidation').form('validate');
+				},
+				success:function(data){
+                    if(data) {
+                        var data_json = eval ("(" + data + ")");
+                        $("#checkPolicyDlg").dialog("open");
+
+                        if(data_json.policy_relation=="PolicyRelation.unrelated") {
+                            $("#policy_relation_img").attr("src", "{{ url_for('static', filename='images/accept.png') }}" );
+                            $("#policy_relation").html("This policy is acceptable.");
+                        }
+                        else if(data_json.policy_relation=="PolicyRelation.duplicated") {
+                            $("#policy_relation_img").attr("src", "{{ url_for('static', filename='images/error.png') }}" );
+                            $("#policy_relation").html("This policy is <span style='color:red;'>duplicated</span> with <a href='#' onclick='doShowById(\""+data_json.related_policy.id+"\")'>another one</a>!");
+                        }
+                        else if(data_json.policy_relation=="PolicyRelation.overlaped_condition") {
+                            $("#policy_relation_img").attr("src", "{{ url_for('static', filename='images/warning.png') }}" );
+                            $("#policy_relation").html("This policy's <span style='color:red;'>condition is overlaped</span> with <a href='#' onclick='doShowById(\""+data_json.related_policy.id+"\")'>another one</a>!");
+                        }
+                        else if(data_json.policy_relation=="PolicyRelation.overlaped_permit") {
+                            $("#policy_relation_img").attr("src", "{{ url_for('static', filename='images/warning.png') }}" );
+                            $("#policy_relation").html("This policy's <span style='color:red;'>permission is interfere</span>d with <a href='#' onclick='doShowById(\""+data_json.related_policy.id+"\")'>another one</a>!");
+                        }
+                        else if(data_json.policy_relation=="PolicyRelation.overlaped_condition_permit") {
+                            $("#policy_relation_img").attr("src", "{{ url_for('static', filename='images/warning.png') }}" );
+                            $("#policy_relation").html("This policy's <span style='color:red;'>condition and permission are both overlaped</span> with <a href='#' onclick='doShowById(\""+data_json.related_policy.id+"\")'>another one</a>!");
+                        }
+                        else if(data_json.policy_relation=="PolicyRelation.preinclude_condition") {
+                            $("#policy_relation_img").attr("src", "{{ url_for('static', filename='images/warning.png') }}" );
+                            $("#policy_relation").html("This policy's <span style='color:red;'>condition has contained</span> the <a href='#' onclick='doShowById(\""+data_json.related_policy.id+"\")'>another one</a>!");
+                        }
+                        else if(data_json.policy_relation=="PolicyRelation.preinclude_permit") {
+                            $("#policy_relation_img").attr("src", "{{ url_for('static', filename='images/warning.png') }}" );
+                            $("#policy_relation").html("This policy's <span style='color:red;'>permission has contained</span> the <a href='#' onclick='doShowById(\""+data_json.related_policy.id+"\")'>another one</a>!");
+                        }
+                        else if(data_json.policy_relation=="PolicyRelation.preinclude_condition_permit") {
+                            $("#policy_relation_img").attr("src", "{{ url_for('static', filename='images/warning.png') }}" );
+                            $("#policy_relation").html("This policy's <span style='color:red;'>condition and permission has contained</span> the <a href='#' onclick='doShowById(\""+data_json.related_policy.id+"\")'>another one</a>!");
+                        }
+                        else if(data_json.policy_relation=="PolicyRelation.postinclude_condition") {
+                            $("#policy_relation_img").attr("src", "{{ url_for('static', filename='images/warning.png') }}" );
+                            $("#policy_relation").html("This policy's <span style='color:red;'>condition has been covered</span> by the <a href='#' onclick='doShowById(\""+data_json.related_policy.id+"\")'>another one</a>!");
+                        }
+                        else if(data_json.policy_relation=="PolicyRelation.postinclude_permit") {
+                            $("#policy_relation_img").attr("src", "{{ url_for('static', filename='images/warning.png') }}" );
+                            $("#policy_relation").html("This policy's <span style='color:red;'>permission has been covered</span> by the <a href='#' onclick='doShowById(\""+data_json.related_policy.id+"\")'>another one</a>!");
+                        }
+                        else if(data_json.policy_relation=="PolicyRelation.postinclude_condition_permit") {
+                            $("#policy_relation_img").attr("src", "{{ url_for('static', filename='images/warning.png') }}" );
+                            $("#policy_relation").html("This policy's <span style='color:red;'>condition and permission has been covered</span> by the <a href='#' onclick='doShowById(\""+data_json.related_policy.id+"\")'>another one</a>!");
+                        }
+                        else if(data_json.policy_relation=="PolicyRelation.hard_conflict") {
+                            $("#policy_relation_img").attr("src", "{{ url_for('static', filename='images/error.png') }}" );
+                            $("#policy_relation").html("This policy is <span style='color:red;'>completely conflicted</span> with <a href='#' onclick='doShowById(\""+data_json.related_policy.id+"\")'>another one</a>!");
+                        }
+                        else if(data_json.policy_relation=="PolicyRelation.soft_conflict") {
+                            $("#policy_relation_img").attr("src", "{{ url_for('static', filename='images/warning.png') }}" );
+                            $("#policy_relation").html("This policy is <span style='color:red;'>partially conflicted</span> with <a href='#' onclick='doShowById(\""+data_json.related_policy.id+"\")'>another one</a>!");
+                        }
+                        else if(data_json.policy_relation=="PolicyRelation.independent") {
+                            $("#policy_relation_img").attr("src", "{{ url_for('static', filename='images/accept.png') }}" );
+                            $("#policy_relation").html("This policy is acceptable.");
+                        }
+
+                        $("#suggestion").hide();
+                        $("#btnSubmit").hide();
+                        var handleStr = "";
+                        if(data_json.handle.length==1 && data_json.handle[0]=="accept_np") {
+                            $("#checkPolicyDlg").css("height","");
+                            handleStr = "You can submit this policy.";
+                            $("#actionBtn").html('<a href="#" class="easyui-linkbutton c4" style="width:100%;" iconCls="icon-ok" onclick="doSubmit(1)">submit</a>');
+                            $.parser.parse($("#actionBtn"));
+                        }
+                        if(data_json.handle.length==1 && data_json.handle[0]=="accept_np_reject_op") {
+                            $("#checkPolicyDlg").css("height","");
+                            handleStr = "You can submit this policy and wait for checking.";
+                            $("#actionBtn").html('<a href="#" class="easyui-linkbutton c4" style="width:100%;" iconCls="icon-ok" onclick="doSubmit(0)">submit</a>');
+                            $.parser.parse($("#actionBtn"));
+                        }
+                        if(data_json.handle.length==1 && data_json.handle[0]=="reject_np") {
+                            $("#checkPolicyDlg").css("height","");
+                            handleStr = "This policy is not acceptable.";
+                        }
+                        if(data_json.handle.length>=1 && (data_json.handle[0].indexOf("accept_mnp")!=-1 || data_json.handle[0].indexOf("accept_mop")!=-1)) {
+                            handleStr = "You may agree and submit one of the following modified poilicies, and wait for checking.";
+                            if(data_json.suggested_policy) {
+                                $("#modified_policy").html(getSuggestPolicyTable(data_json.suggested_policy));
+                                $("#suggestion").show();
+                                $.parser.parse($("#suggestion"));
+                            }
+                        }
+                        $("#handle").html(handleStr);
+                    }
+				} 
+			});
+        }
+        function getSuggestPolicyTable(suggested_policy) {
+            var pl_html = "";
+            for(var i=0;i<suggested_policy.length;i++) {
+                var item = suggested_policy[i];
+                pl_html += 'Alternative ' + (i+1) + ':';
+                pl_html += '<table style="width:100%;" border="1" cellspacing="0">';
+                pl_html += '    <tr>';
+                pl_html += '        <td>name:</td>';
+                pl_html += '        <td>'+item.name+'</td>';
+                pl_html += '    </tr>';
+                pl_html += '    <tr>';
+                pl_html += '        <td>user name:</td>';
+                pl_html += '        <td>'+item.user+'</td>';
+                pl_html += '    </tr>';
+                pl_html += '    <tr>';
+                pl_html += '        <td>device id:</td>';
+                pl_html += '        <td>'+item.device+'</td>';
+                pl_html += '    </tr>';
+                pl_html += '    <tr>';
+                pl_html += '        <td>capability:</td>';
+                pl_html += '        <td>'+item.capability+'</td>';
+                pl_html += '    </tr>';
+                pl_html += '    <tr>';
+                pl_html += '        <td>status_permit:</td>';
+                pl_html += '        <td>'+item.status_permit+'</td>';
+                pl_html += '    </tr>';
+                pl_html += '    <tr>';
+                pl_html += '        <td>action_permit:</td>';
+                pl_html += '        <td>'+item.action_permit+'</td>';
+                pl_html += '    </tr>';
+                pl_html += '    <tr>';
+                pl_html += '        <td>attri_permit:</td>';
+                pl_html += '        <td>'+JSON.stringify(item.attri_permit)+'</td>';
+                pl_html += '    </tr>';
+                pl_html += '    <tr>';
+                pl_html += '        <td>time_condition:</td>';
+                pl_html += '        <td>'+JSON.stringify(item.time_condition)+'</td>';
+                pl_html += '    </tr>';
+                pl_html += '    <tr>';
+                pl_html += '        <td>location_condition:</td>';
+                pl_html += '        <td>'+item.location_condition+'</td>';
+                pl_html += '    </tr>';
+                pl_html += '    <tr>';
+                pl_html += '        <td>attri_condition:</td>';
+                pl_html += '        <td>'+JSON.stringify(item.attri_condition)+'</td>';
+                pl_html += '    </tr>';
+                pl_html += '</table>';
+                var s_p_json_str = JSON.stringify(item).replaceAll('"', '\\\"');
+                pl_html += '<a href="#" class="easyui-linkbutton c1" style="width:100%;height:25px;" onclick=\'doAgreeSubmitSuggestPolicy("'+s_p_json_str+'")\'>agree & submit</a>';
+                
+                pl_html += "<br><br>";
+            }
+            return pl_html;
+        }
+        function doAgreeSubmitSuggestPolicy(modified_policy) {
+            if(modified_policy) {
+                $.post('agreeSubmitSuggestPolicy', {modified_policy:modified_policy}, function(data, status){
+                    if(data=="success") {
+                        $.messager.alert('hint','success','info');
+                        $("#checkPolicyDlg").dialog("close");
+                        $('#policy').datagrid('clearSelections'); 
+                        $('#policy').datagrid('reload');
+                    }
+                    else {
+                        $.messager.alert('hint',data,'info');
+                    }
+                });
+            }
+        }
+	    function doSubmit(flag) {
+            $("#checkPolicyDlg").dialog("close");
+            $('#loadingDlg').dialog('open');
+	        $('#policyFormAdd').form('submit',{
+				url:'addPolicy',
+				onSubmit:function(param){
+                    param.attri_permit = JSON.stringify($("#attripermitAdd").datagrid("getData"));
+                    param.time_condition = JSON.stringify($("#timeconditionAdd").datagrid("getData"));
+                    param.location_condition = ($("#prefixLocationCondition").combobox("getValue")=="2"?"-":"")+($("#locationconditionAdd").combobox("getValue"));
+                    param.attri_condition = JSON.stringify($("#attriconditionAdd").datagrid("getData"));
+                    param.flag = flag;
+
+					return $(this).form('enableValidation').form('validate');
+				},
+				success:function(data){
+                    $('#loadingDlg').dialog('close');
+				    if(data=='success') {
+				        $.messager.alert('hint', 'success', 'info');
+                        $('#policyFormAdd').form('clear');
+                        $("#attripermitAdd").datagrid("loadData", []);
+                        $("#timeconditionAdd").datagrid("loadData", []);
+                        $("#attriconditionAdd").datagrid("loadData", []);
+                        $("#statuspermitAdd").combobox("setValue", "True");
+                        $("#actionpermitAdd").combobox("setValue", "True");
+                        $("#locationconditionAdd").combobox("setValue", "any");
+                        $("#prefixLocationCondition").combobox("setValue", "+");
+				    }
+				    else {
+				        $.messager.alert('hint', data, 'info');
+				    }
+				} 
+			});
+	    }
+
+        // Attri Permit Config
+        function doAddAttriPermit() {
+            $("#addAttriPermitDlg").dialog("open");
+            var capabilityid = $("#capabilityAdd").combobox("getValue");
+            $("#attributePermitConfig").combobox({
+                editable: false,
+                panelHeight: 'auto',
+				valueField: 'id',
+    			textField: 'name',
+    			url: 'getAttributeJson?capability='+capabilityid
+            });
+            $("#permitConfigBoolRow").show();
+            $("#permitConfigNumberRow").hide();
+        }
+        function doRemoveAttriPermit() {
+            var row = $('#attripermitAdd').datagrid('getSelected');
+            if(row) {
+                var index = $("#attripermitAdd").datagrid('getRowIndex', row);
+                $("#attripermitAdd").datagrid('deleteRow', index);
+            }
+        }
+        function doConfirmAttriPermit() {
+            var attri_name = $("#attributePermitConfig").combobox("getText");
+            var attri_type = $("#typePermitConfig").combobox("getValue");
+            if(attri_type=="1") {
+                var boolValue = $("#boolValuePermitConfig").combobox("getValue");
+                $('#attripermitAdd').datagrid('getData').rows.forEach(function(row){
+                    if(row.attribute==attri_name) {
+                        $('#attripermitAdd').datagrid('deleteRow', $('#attripermitAdd').datagrid('getRowIndex', row));
+                    }
+                });
+                $('#attripermitAdd').datagrid('appendRow',{
+                    attribute: attri_name,
+                    value: boolValue
+                });
+            }
+            else {
+                var prefix = $("#prefixPermitConfig").combobox("getValue")=="1"?"+":"-";
+                var numberValueBegin = $("#numberValuePermitConfigBegin").textbox("getValue");
+                var numberValueEnd = $("#numberValuePermitConfigEnd").textbox("getValue");
+                var number_interval = `${prefix}(${numberValueBegin},${numberValueEnd})`;
+                $('#attripermitAdd').datagrid('appendRow',{
+                    attribute: attri_name,
+                    value: number_interval
+                });
+            }
+            $("#addAttriPermitDlg").dialog("close");
+        }
+
+        // Time Condition Config
+        function doAddTimeCondition() {
+            $("#addTimeConditionDlg").dialog("open");
+            $("#timeConfigBegin").datetimebox("setValue", "");
+            $("#timeConfigEnd").datetimebox("setValue", "");
+        }
+        function doRemoveTimeCondition() {
+            var row = $('#timeconditionAdd').datagrid('getSelected');
+            if(row) {
+                var index = $("#timeconditionAdd").datagrid('getRowIndex', row);
+                $("#timeconditionAdd").datagrid('deleteRow', index);
+            }
+        }
+        function doConfirmTimeCondition() {
+            var prefix = $("#prefixTimeCondition").combobox("getValue")=="1"?"+":"-";
+            var time_begin = $("#timeConfigBegin").datetimebox("getValue");
+            var time_end = $("#timeConfigEnd").datetimebox("getValue");
+            var time_interval = `${prefix}(${time_begin},${time_end})`;
+
+            $('#timeconditionAdd').datagrid('appendRow',{
+                time: time_interval
+            });
+            $("#addTimeConditionDlg").dialog("close");
+        }
+
+        // Attri Condition Config
+        function doAddAttriCondition() {
+            $("#addAttriConditionDlg").dialog("open");
+            var capabilityid = $("#capabilityAdd").combobox("getValue");
+            $("#attributeConditionConfig").combobox({
+                editable: false,
+                panelHeight: 'auto',
+				valueField: 'id',
+    			textField: 'name',
+    			url: 'getAttributeJson?capability='+capabilityid
+            });
+            $("#conditionConfigBoolRow").show();
+            $("#conditionConfigNumberRow").hide();
+        }
+        function doRemoveAttriCondition() {
+            var row = $('#attriconditionAdd').datagrid('getSelected');
+            if(row) {
+                var index = $("#attriconditionAdd").datagrid('getRowIndex', row);
+                $("#attriconditionAdd").datagrid('deleteRow', index);
+            }
+        }
+        function doConfirmAttriCondition() {
+            var attri_name = $("#attributeConditionConfig").combobox("getText");
+            var attri_type = $("#typeConditionConfig").combobox("getValue");
+            if(attri_type=="1") {
+                var boolValue = $("#boolValueConditionConfig").combobox("getValue");
+                $('#attripermitAdd').datagrid('getData').rows.forEach(function(row){
+                    if(row.attribute==attri_name) {
+                        $('#attripermitAdd').datagrid('deleteRow', $('#attripermitAdd').datagrid('getRowIndex', row));
+                    }
+                });
+                $('#attriconditionAdd').datagrid('appendRow',{
+                    attribute: attri_name,
+                    value: boolValue
+                });
+            }
+            else {
+                var prefix = $("#prefixConditionConfig").combobox("getValue")=="1"?"+":"-";
+                var numberValueBegin = $("#numberValueConditionConfigBegin").textbox("getValue");
+                var numberValueEnd = $("#numberValueConditionConfigEnd").textbox("getValue");
+                var number_interval = `${prefix}(${numberValueBegin},${numberValueEnd})`;
+                $('#attriconditionAdd').datagrid('appendRow',{
+                    attribute: attri_name,
+                    value: number_interval
+                });
+            }
+            $("#addAttriConditionDlg").dialog("close");
+        }
+
+        $(document).ready(function(){
+            $('#policyFormAdd').form('clear');
+            $("#userAdd").combobox({
+                editable: false,
+                panelHeight: 'auto',
+				valueField: 'id',
+    			textField: 'username',
+    			url: 'getAllUserJson'
+            });
+            $("#statuspermitAdd").combobox("setValue", "True");
+            $("#actionpermitAdd").combobox("setValue", "True");
+            $("#locationconditionAdd").combobox("setValue", "any");
+            $("#prefixLocationCondition").combobox("setValue", "+");
+
+            $("#platformAdd").combobox({
+                editable: false,
+                panelHeight: 'auto',
+				valueField: 'id',
+    			textField: 'name',
+    			url: 'getAllPlatformJson',
+                onClick: function(item){
+                    $("#deviceAdd").combobox({
+                        editable: false,
+                        panelHeight: 'auto',
+                        valueField: 'id',
+                        textField: 'name',
+                        url: 'getAllDeviceJson?platform='+item.id,
+                        onClick: function(item){
+                            $("#capabilityAdd").combobox({
+                                editable: false,
+                                panelHeight: 'auto',
+                                valueField: 'id',
+                                textField: 'name',
+                                url: 'getAllCapabilityJson?device='+item.id
+                            })
+                        }
+                    })
+                }
+            });
+            $("#typePermitConfig").combobox({
+                onClick: function(item){
+                    if(item.value=="1") {
+                        $("#permitConfigBoolRow").show();
+                        $("#permitConfigNumberRow").hide();
+                    }
+                    else {
+                        $("#permitConfigBoolRow").hide();
+                        $("#permitConfigNumberRow").show();
+                    }
+                }
+            });
+            $("#typeConditionConfig").combobox({
+                onClick: function(item){
+                    if(item.value=="1") {
+                        $("#conditionConfigBoolRow").show();
+                        $("#conditionConfigNumberRow").hide();
+                    }
+                    else {
+                        $("#conditionConfigBoolRow").hide();
+                        $("#conditionConfigNumberRow").show();
+                    }
+                }
+            });
+        });
+    </script>
+  </body>
+</html>

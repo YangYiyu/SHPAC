@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>UserControl</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/themes/metro/easyui.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/themes/mobile.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/themes/icon.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/themes/color.css') }}">
+	<script type="text/javascript" src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='js/jquery.easyui.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.easyui.mobile.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.color.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/socketio/socket.io.js') }}"></script>
+    <style>
+        .m-list .m-list-group {background-color: #c9c7c7;}
+    </style>
+  </head>
+  <body>
+    <div id="main" class="easyui-navpanel">
+		<header>
+			<div class="m-toolbar">
+				<div class="m-title">User:{{ session["valid_user"] }}</div>
+				<div class="m-right">
+					<a href="javascript:void(0)" class="easyui-menubutton" data-options="iconCls:'icon-more',menu:'#mm',menuAlign:'right',hasDownArrow:false"></a>
+				</div>
+			</div>
+		</header>
+        <div class="easyui-tabs" data-options="fit:true,border:false,pill:true,justified:true,tabWidth:80,tabHeight:35">
+            {% for platform_name in platformMap %}
+            <div title="{{ platform_name }}" style="padding:10px">
+                <div class="easyui-accordion" fit="true" border="false">
+                    {% for device_name in platformMap[platform_name] %}
+                    <div title="{{ platformMap[platform_name][device_name]['devicevid'] }}">
+                        <div class="easyui-navpanel">
+                            <ul class="m-list">
+                                {% for capa_name in platformMap[platform_name][device_name]["capability"] %}
+                                <li class="m-list-group">{{ capa_name }}</li>
+                                {% for attri_name in platformMap[platform_name][device_name]["capability"][capa_name] %}
+                                {% if platformMap[platform_name][device_name]["capability"][capa_name][attri_name]=="switchbutton" %}
+                                <li>
+                                    <span>{{ attri_name }} status: </span>
+                                    <span id="{{ platformMap[platform_name][device_name]['devicevid'] }}-{{ capa_name }}-{{ attri_name }}-status" style="padding-left:10px;">unknown</span>
+                                    <div class="m-right">
+                                        <a id="{{ platformMap[platform_name][device_name]['devicevid'] }}-{{ capa_name }}-{{ attri_name }}" href="#" class="easyui-linkbutton c1" style="width:100px;height:30px;line-height:30px;"></a>
+                                    </div>
+                                </li>
+                                {% endif %}
+                                {% if platformMap[platform_name][device_name]["capability"][capa_name][attri_name]=="colorpicker" %}
+                                <li>
+                                    <span>{{ attri_name }} status: </span>
+                                    <span id="{{ platformMap[platform_name][device_name]['devicevid'] }}-{{ capa_name }}-{{ attri_name }}-status" style="padding-left:10px;">unknown</span>
+                                    <div style="padding-top:5px;">
+                                        <input id="{{ platformMap[platform_name][device_name]['devicevid'] }}-{{ capa_name }}-{{ attri_name }}" type="text" class="easyui-color" style="width:100px;height:30px;line-height:30px;">
+                                    </div>
+                                </li>
+                                {% endif %}
+                                {% if platformMap[platform_name][device_name]["capability"][capa_name][attri_name]=="numberslider" %}
+                                <li>
+                                    <span>{{ attri_name }} status: </span>
+                                    <span id="{{ platformMap[platform_name][device_name]['devicevid'] }}-{{ capa_name }}-{{ attri_name }}-status" style="padding-left:10px;">unknown</span>
+                                    <div style="padding-top:5px;">  
+                                        <input id="{{ platformMap[platform_name][device_name]['devicevid'] }}-{{ capa_name }}-{{ attri_name }}" class="easyui-slider" value="0" style="width:300px" data-options="">
+                                    </div>
+                                </li>
+                                {% endif %}
+                                {% endfor %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+	</div>
+
+	<div id="mm" class="easyui-menu" style="width:150px;">
+        <div>
+            <span>Policy</span>
+            <div>
+                <div>Add Policy</div>
+                <div>All Policy</div>
+            </div>
+        </div>
+	</div>
+
+    <div id="checkDlg" class="easyui-dialog" title="Permission Warning" style="width:100%;padding:10px;" data-options="
+            conCls: 'icon-cancel',
+            buttons: [
+                {
+                    text:'close',
+                    iconCls:'icon-cancel',
+                    handler:function(){
+                        $('#checkDlg').dialog('close');
+                    }
+                }
+            ]
+        " closed="true" modal="true">
+        <form id="checkForm" class="easyui-form" method="post" data-options="novalidate:true">
+			<table cellpadding="5" >
+	    		<tr>
+	    		    <td>
+                        <table>
+                            <tr>
+                                <td style="text-align: center;"><img id="result_img" src="{{ url_for('static', filename='images/error.png') }}" width=36></td>
+                                <td id="result_msg"></td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+	    	</table>
+        </form>
+    </div>
+
+    <div id="loadingDlg" class="easyui-dialog" style="width:95%;padding:10px;" data-options="" title="" closed="true" closable="false" modal="true">
+        <div style="text-align:center;"><img src="{{ url_for('static', filename='images/loading.gif') }}"></div>
+        <div style="text-align:center;">waiting……</div>
+    </div>
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $("#mm").menu({
+                "onClick": function(item) {
+                    if(item.text=="Add Policy") {
+                        location.href="PolicyAddPage";
+                    }
+                    if(item.text=="All Policy") {
+                        location.href="getAllUserPolicy";
+                    }
+                }
+            });
+        });
+    </script>
+    <script type="text/javascript">
+        var user = "{{ session.get('valid_user') }}";
+        var socket = null;
+        $(document).ready(function(){
+            socket = io.connect("http://" + document.domain + ":" + location.port + "?username=" + user);
+            socket.on("connected", function(msg) {
+                if(msg=="success") {
+                    var subscribe_info = [];
+                    
+                    {% for platform_name in platformMap %}
+                        {% for device_name in platformMap[platform_name] %}
+                            {% for capa_name in platformMap[platform_name][device_name]["capability"] %}
+                    subscribe_info.push({"platform":"{{platform_name}}","device":"{{device_name}}","devicevid":"{{platformMap[platform_name][device_name]['devicevid']}}","capability":"{{capa_name}}"});
+                            {% endfor %}
+                        {% endfor %}
+                    {% endfor %}
+
+                    socket.emit("subscribemsg", subscribe_info);
+                }
+            });
+        });
+    </script>
+    <script type="text/javascript">
+        // 设置开关按钮状态
+        function setLinkBtnStatus(id, status) {
+            var btn = $(`#${id}`);
+            var label = $(`#${id}-status`);
+            if(btn) {
+                if(status=="off") {
+                    if(btn.hasClass("easyui-linkbutton c3") || btn.html()=="") {
+                        btn.removeClass("easyui-linkbutton c3");
+                        btn.addClass("easyui-linkbutton c1");
+                        btn.html("turn on");
+                    }
+                    if(label) {
+                        label.html("off");
+                    }
+                }
+                else if(status=="on") {
+                    if(btn.hasClass("easyui-linkbutton c1")) {
+                        btn.removeClass("easyui-linkbutton c1");
+                        btn.addClass("easyui-linkbutton c3");
+                        btn.html("turn off");
+                    }
+                    if(label) {
+                        label.html("on");
+                    }
+                }
+            }
+        }
+        // 设置颜色状态
+        function setColorLabelStatus(id, status) {
+            var label = $(`#${id}-status`);
+            if(label) {
+                label.html(status);
+                label.css("background-color", status);
+            }
+        }
+        // 设置数字slider的值
+        function setSliderLabelStatus(id, status) {
+            var label = $(`#${id}-status`);
+            if(label) {
+                label.html(status);
+            }
+            $(`#${id}`).slider("setValue", status);
+        }
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+            {% for platform_name in platformMap %}
+                {% for device_name in platformMap[platform_name] %}
+                    {% for capa_name in platformMap[platform_name][device_name]["capability"] %}
+                        {% for attri_name in platformMap[platform_name][device_name]["capability"][capa_name] %}
+                            {% if platformMap[platform_name][device_name]["capability"][capa_name][attri_name]=="switchbutton" %}
+            socket.on("{{ platformMap[platform_name][device_name]['devicevid'] }}-{{ capa_name }}-{{ attri_name }}", function(msg) {
+                var _id = `${msg["devicevid"]}-${msg["capability"]}-${msg["attribute"]}`;
+                var _status = msg["value"];
+                if(_status=="True") {
+                    setLinkBtnStatus(_id, "on");
+                }
+                else if(_status=="False") {
+                    setLinkBtnStatus(_id, "off");
+                }
+                else {
+                    alert("Illegal status!");
+                }
+            });
+            $("#{{ platformMap[platform_name][device_name]['devicevid'] }}-{{ capa_name }}-{{ attri_name }}").click(function() {
+                var btn = $("#{{ platformMap[platform_name][device_name]['devicevid'] }}-{{ capa_name }}-{{ attri_name }}");
+                if(btn.hasClass("easyui-linkbutton c1")) {
+                    $("#loadingDlg").dialog("open").dialog("center");
+                    $.post("doAction", {username: user, platform:"{{ platform_name }}",device:"{{ device_name }}",devicevid:"{{ platformMap[platform_name][device_name]['devicevid'] }}",capability:"{{ capa_name }}",attribute:"{{ attri_name }}",value:"True"}, function(data,status){
+                        if(data && data=="success") {
+                            // $.messager.alert("hint", "Success!", "info");
+                        }
+                        else if(data && data!="success") {
+                            $("#checkDlg").dialog("open");
+                            $("#result_msg").html(data);
+                        }
+                        $("#loadingDlg").dialog("close");
+                    });
+                }
+                else if(btn.hasClass("easyui-linkbutton c3")) {
+                    $("#loadingDlg").dialog("open").dialog("center");
+                    $.post("doAction", {username: user, platform:"{{ platform_name }}",device:"{{ device_name }}",devicevid:"{{ platformMap[platform_name][device_name]['devicevid'] }}",capability:"{{ capa_name }}",attribute:"{{ attri_name }}",value:"False"}, function(data,status){
+                        if(data && data=="success") {
+                            // $.messager.alert("hint", "Success!", "info");
+                        }
+                        else {
+                            $("#checkDlg").dialog("open");
+                            $("#result_msg").html(data);
+                        }
+                        $("#loadingDlg").dialog("close");
+                    });
+                }
+            });
+            $.post("getCapabilityStatus", {platform:"{{ platform_name }}",devicevid:"{{ platformMap[platform_name][device_name]['devicevid'] }}",capability:"{{ capa_name }}",attribute:"{{ attri_name }}"}, function(data, status){
+                if(data) {
+                    var _id = "{{ platformMap[platform_name][device_name]['devicevid'] }}-{{ capa_name }}-{{ attri_name }}";
+                    if(data=="True") {
+                        setLinkBtnStatus(_id, "on");
+                    }
+                    else if(data=="False") {
+                        setLinkBtnStatus(_id, "off");
+                    }
+                }
+            });
+                            {% endif %}
+                            {% if platformMap[platform_name][device_name]["capability"][capa_name][attri_name]=="colorpicker" %}
+            socket.on("{{ platformMap[platform_name][device_name]['devicevid'] }}-{{ capa_name }}-{{ attri_name }}", function(msg) {
+                if(msg) {
+                    var _id = `${msg["devicevid"]}-${msg["capability"]}-${msg["attribute"]}`;
+                    var _status = msg["value"];
+                    setColorLabelStatus(_id, _status);
+                }
+            });
+            $("#{{ platformMap[platform_name][device_name]['devicevid'] }}-{{ capa_name }}-{{ attri_name }}").combo({
+                onChange: function(val) {
+                    $("#loadingDlg").dialog("open").dialog("center");
+                    $.post("doAction", {username: user, platform:"{{ platform_name }}",device:"{{ device_name }}",devicevid:"{{ platformMap[platform_name][device_name]['devicevid'] }}",capability:"{{ capa_name }}",attribute:"{{ attri_name }}",value:val}, function(data,status){
+                        if(data && data=="success") {
+                            
+                        }
+                        else {
+                            $("#checkDlg").dialog("open");
+                            $("#result_msg").html(data);
+                        }
+                        $("#loadingDlg").dialog("close");
+                    });
+                }
+            });
+            $.post("getCapabilityStatus", {platform:"{{ platform_name }}",devicevid:"{{ platformMap[platform_name][device_name]['devicevid'] }}",capability:"{{ capa_name }}",attribute:"{{ attri_name }}"}, function(data, status){
+                if(data) {
+                    var _id = "{{ platformMap[platform_name][device_name]['devicevid'] }}-{{ capa_name }}-{{ attri_name }}";
+                    setColorLabelStatus(_id, data);
+                }
+            });
+                            {% endif %}
+                            {% if platformMap[platform_name][device_name]["capability"][capa_name][attri_name]=="numberslider" %}
+            socket.on("{{ platformMap[platform_name][device_name]['devicevid'] }}-{{ capa_name }}-{{ attri_name }}", function(msg) {
+                if(msg) {
+                    var _id = `${msg["devicevid"]}-${msg["capability"]}-${msg["attribute"]}`;
+                    var _status = msg["value"];
+                    setSliderLabelStatus(_id, _status);
+                }
+            });
+            $("#{{ platformMap[platform_name][device_name]['devicevid'] }}-{{ capa_name }}-{{ attri_name }}").slider({
+                onComplete: function(val) {
+                    $("#loadingDlg").dialog("open").dialog("center");
+                    $.post("doAction", {username: user, platform:"{{ platform_name }}",device:"{{ device_name }}",devicevid:"{{ platformMap[platform_name][device_name]['devicevid'] }}",capability:"{{ capa_name }}",attribute:"{{ attri_name }}",value:val}, function(data,status){
+                        if(data && data=="success") {
+                            
+                        }
+                        else {
+                            $("#checkDlg").dialog("open");
+                            $("#result_msg").html(data);
+                        }
+                        $("#loadingDlg").dialog("close");
+                    });
+                    
+                }
+            });
+            $.post("getCapabilityStatus", {platform:"{{ platform_name }}",devicevid:"{{ platformMap[platform_name][device_name]['devicevid'] }}",capability:"{{ capa_name }}",attribute:"{{ attri_name }}"}, function(data, status){
+                if(data) {
+                    var _id = "{{ platformMap[platform_name][device_name]['devicevid'] }}-{{ capa_name }}-{{ attri_name }}";
+                    setSliderLabelStatus(_id, data);
+                }
+            });
+                            {% endif %}
+                        {% endfor %}
+                    {% endfor %}
+                {% endfor %}
+            {% endfor %}
+        });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AppBase</title>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/themes/gray/easyui.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/themes/icon.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/themes/color.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/default.css') }}">
+	<script type="text/javascript" src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='js/jquery.easyui.min.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='js/locale/easyui-lang-zh_CN.js') }}"></script>
+</head>
+<body style="width:100%;height:100%;margin:0px;padding:0px;">
+    <table id="app" class="easyui-datagrid" title="" style="width:100%;height:100%;" 
+        data-options="rownumbers:true,singleSelect:true,url:'getAllPlatformDatagrid',method:'post',toolbar:'#tb',pagination:true">
+        <thead>
+            <tr>
+                <th data-options="field:'id',width:120,hidden:true">id</th>
+                <th data-options="field:'name',width:180,align:'center'">platform name</th>
+                <th data-options="field:'package',width:280,align:'center'">package</th>
+                <th data-options="field:'activity',width:360,align:'center'">activity</th>
+            </tr>
+        </thead>
+    </table>
+    <div id="tb" style="padding:2px 5px;">
+        <div style="font-size:14px;padding-top: 10px;">
+            platform name:&nbsp;<input class="easyui-textbox" id="appname" style="line-height:18px;border:1px solid #ccc">
+            <span style="padding-left: 10px;"></span>
+            <a href="#" class="easyui-linkbutton c4" iconCls="icon-search" onclick="doSearch()" style="width:100px;">Search</a>
+            <!-- <span style="padding-left: 10px;"></span>
+            <a href="#" class="easyui-linkbutton c4" iconCls="icon-add" onclick="doOpen()" style="width:100px;">Add</a> -->
+            <span style="padding-left: 10px;"></span>
+            <a href="#" class="easyui-linkbutton c4" iconCls="icon-edit" onclick="doEdit()" style="width:100px;">Edit</a>
+            <span style="padding-left: 10px;"></span>
+            <a href="#" class="easyui-linkbutton c4" iconCls="icon-cancel" onclick="doDelete()" style="width:100px;">Remove</a>
+        </div>
+    </div>
+    <div id="ft" style="height:18px;padding:5px 5px;">
+        
+    </div>
+
+    <div id="addAppDlg" class="easyui-dialog" title="Add new app" style="width:600px;padding:10px;" data-options="
+            conCls: 'icon-new',
+            buttons: [{
+                text:'Save',
+                iconCls:'icon-ok',
+                handler:function(){
+                    doAdd();
+                }
+            }]
+        " closed="true" modal="true">
+        <form id="appFormAdd" class="easyui-form" method="post" data-options="novalidate:true">
+			<table cellpadding="5" >
+	    		<tr>
+	    		    <td>platform name:</td>
+	    		    <td><input class="easyui-textbox" type="text" id="nameAdd" name="name" data-options="required:true" panelHeight="auto"></input></td>
+	    		</tr>
+                <tr>
+	    		    <td>package:</td>
+	    		    <td><input class="easyui-textbox" type="text" id="packageAdd" name="package" data-options="required:true,readonly:true" panelHeight="auto" style="width:480px;"></input></td>
+	    		</tr>
+                <tr>
+	    		    <td>activity:</td>
+	    		    <td><input class="easyui-textbox" type="text" id="activityAdd" name="activity" data-options="required:true,readonly:true" panelHeight="auto" style="width:480px;"></input></td>
+	    		</tr>
+	    	</table>
+        </form>
+    </div>
+
+    <div id="editAppDlg" class="easyui-dialog" title="Edit app" style="width:600px;padding:10px;" data-options="
+            conCls: 'icon-edit',
+            buttons: [{
+                text:'Save',
+                iconCls:'icon-ok',
+                handler:function(){
+                    doSave();
+                }
+            }]
+        " closed="true" modal="true">
+        <form id="appFormEdit" class="easyui-form" method="post" data-options="novalidate:true">
+			<input type="hidden" id="idEdit" name="id" >
+            <table cellpadding="5" >
+                <tr>
+	    		    <td>platform name:</td>
+	    		    <td><input class="easyui-textbox" type="text" id="nameEdit" name="name" data-options="required:true" panelHeight="auto"></input></td>
+	    		</tr>
+	    		<tr>
+	    		    <td>package:</td>
+	    		    <td><input class="easyui-textbox" type="text" id="packageEdit" name="package" data-options="required:true,readonly:true" panelHeight="auto" style="width:500px;"></input></td>
+	    		</tr>
+                <tr>
+	    		    <td>activity:</td>
+	    		    <td><input class="easyui-textbox" type="text" id="activityEdit" name="activity" data-options="required:true,readonly:true" panelHeight="auto" style="width:500px;"></input></td>
+	    		</tr>
+	    	</table>
+        </form>
+    </div>
+
+    <div id="loadingDlg" class="easyui-dialog" style="width:200px;padding:10px;" data-options="" title="" closed="true" closable="false" modal="true">
+        <div style="text-align:center;"><img src="{{ url_for('static', filename='images/loading.gif') }}"></div>
+        <div style="text-align:center;">loading……</div>
+    </div>
+
+    <script type="text/javascript">
+        function doSearch() {
+            $('#app').datagrid({
+                url: 'getAllPlatformDatagrid',
+                method: 'POST',
+                queryParams: {
+                    package: $('#appname').textbox('getValue')
+                }
+            });
+        }        
+        function doOpen() {
+	        $('#addAppDlg').dialog('open');
+	        $('#appFormAdd').form('clear');
+            $('#loadingDlg').dialog('open');
+            $.post('getAppCurrent',{},function(data, status){
+                if(data) {
+                    $('#packageAdd').textbox('setValue', data["package"]);
+                    $('#activityAdd').textbox('setValue', data["activity"]);
+                    $('#loadingDlg').dialog('close');
+                }
+            });
+	    }
+	    function doAdd() {
+            $('#loadingDlg').dialog('open');
+	        $('#appFormAdd').form('submit',{
+				url:'addPlatform',
+				onSubmit:function(){
+					return $(this).form('enableValidation').form('validate');
+				},
+				success:function(data){
+                    $('#loadingDlg').dialog('close');
+				    if(data=='success') {
+				        // $.messager.alert('hint', 'success', 'info');
+				        $('#addAppDlg').dialog('close');
+				        $('#app').datagrid('reload');
+				    }
+				    else {
+				        $.messager.alert('hint', 'failed', 'info');
+				        $('#addAppDlg').dialog('close');
+				        $('#app').datagrid('reload');
+				    }
+				} 
+			});
+	    }
+	    function doEdit() {
+	        var row = $('#app').datagrid('getSelected');
+            if (row) {
+                $('#editAppDlg').dialog('open');
+                $('#appFormEdit').form('clear');
+                $('#appFormEdit').form('load', row);
+                $('#loadingDlg').dialog('open');
+                $.post('getAppCurrent',{},function(data, status){
+                    if(data) {
+                        $('#packageAdd').textbox('setValue', data["package"]);
+                        $('#activityAdd').textbox('setValue', data["activity"]);
+                        $('#loadingDlg').dialog('close');
+                    }
+                });
+            }
+	    }
+	    function doSave() {
+            $('#loadingDlg').dialog('open');
+	        $('#appFormEdit').form('submit',{
+				url:'savePlatform',
+				onSubmit:function(){
+					return $(this).form('enableValidation').form('validate');
+				},
+				success:function(data){
+                    $('#loadingDlg').dialog('close');
+				    if(data=='success') {
+				        // $.messager.alert('hint', 'success', 'info');
+				        $('#app').datagrid('reload');
+				        $('#editAppDlg').dialog('close');
+				    }
+				    else {
+				        $.messager.alert('hint', 'failed', 'info');
+				        $('#app').datagrid('reload');
+				        $('#editAppDlg').dialog('close');
+				    }
+				} 
+			});
+	    }
+	    function doDelete() {
+            var row = $('#app').datagrid('getSelected');
+            if(row == null) {
+                $.messager.alter('hint','Plesae select one row','info');
+            }
+            if (row) {
+                $.messager.confirm('confirm', 'Are you sure about deleting?', function (r) {
+                    if (r) {
+                        $('#loadingDlg').dialog('open');
+                        $.post('deleteApp', { id: row.id }, function (result) {
+                            $('#loadingDlg').dialog('close');
+                            if (result=='success') {
+                                $('#app').datagrid('clearSelections'); //清空选中的行  
+                                // $.messager.alert('hint', 'success', 'info'); 
+                                $('#app').datagrid('reload');    // reload the data 
+                            } else {
+                                $.messager.show({   // show error message 
+                                    title: 'Error',
+                                    msg: result
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+        }  
+
+        $(document).ready(function(){
+            
+        });
+    </script>
+</body>
+</html>

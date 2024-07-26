@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AttributeBase</title>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/themes/gray/easyui.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/themes/icon.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/themes/color.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/default.css') }}">
+	<script type="text/javascript" src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='js/jquery.easyui.min.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='js/locale/easyui-lang-zh_CN.js') }}"></script>
+</head>
+<body style="width:100%;height:100%;margin:0px;padding:0px;">
+    <table id="attribute" class="easyui-datagrid" title="" style="width:100%;height:100%;" data-options="rownumbers:true,singleSelect:true,toolbar:'#ctb',pagination:true">
+        <thead>
+            <tr>
+                <th data-options="field:'id',width:120,hidden:true">id</th>
+                <th data-options="field:'platform',width:120,align:'center'">platform</th>
+                <th data-options="field:'package',width:240,align:'center'">package</th>
+                <th data-options="field:'activity',width:320,align:'center'">activity</th>
+                <th data-options="field:'device',width:120,align:'center'">device</th>
+                <th data-options="field:'capability',width:180,align:'center'">capability</th>
+                <th data-options="field:'attribute',width:180,align:'center'">attribute</th>
+                <th data-options="field:'control',width:180,align:'center'">control</th>
+            </tr>
+        </thead>
+    </table>
+    <div id="ctb" style="padding:2px 5px;">
+        <div>
+            platform:&nbsp;<input class="easyui-combobox" id="platformS" style="width:100px;">
+            device:&nbsp;<input class="easyui-combobox" id="deviceS" style="width:100px;">
+            capability:&nbsp;<input class="easyui-combobox" id="capabilityS" style="width:100px;">
+            <span style="padding-left: 10px;"></span>
+            <a href="#" class="easyui-linkbutton c4" iconCls="icon-search" onclick="doSearch()" style="width:80px;">Search</a>
+            <span style="padding-left: 10px;"></span>
+            <a href="#" class="easyui-linkbutton c4" iconCls="icon-edit" onclick="doEdit()" style="width:80px;">Edit</a>
+        </div>
+    </div>
+
+    <div id="editAttributeDlg" class="easyui-dialog" title="Edit Attribute" style="width:600px;padding:10px;" data-options="
+            conCls: 'icon-edit',
+            buttons: [{
+                text:'Save',
+                iconCls:'icon-ok',
+                handler:function(){
+                    doSave();
+                }
+            }]
+        " closed="true" modal="true">
+        <form id="attributeFormEdit" class="easyui-form" method="post" data-options="novalidate:true">
+			<input type="hidden" id="idEdit" name="id" >
+            <table cellpadding="5" >
+                <tr>
+	    		    <td>attribute name:</td>
+	    		    <td><input class="easyui-textbox" type="text" id="nameEdit" name="name" data-options="required:true" panelHeight="auto"></input></td>
+	    		</tr>
+                <tr>
+	    		    <td>attribute control:</td>
+	    		    <td>
+                        <select id="controlEdit" class="easyui-combobox" name="control" data-options="required:true,editable:false" panelHeight="auto" style="width: 160px;">
+                            <option value="switchbutton">switchbutton</option>
+                            <option value="colorpicker">colorpicker</option>
+                            <option value="numberslider">numberslider</option>
+                        </select>
+                    </td>
+	    		</tr>
+	    	</table>
+        </form>
+    </div>
+
+    <div id="loadingDlg" class="easyui-dialog" style="width:200px;padding:10px;" data-options="" title="" closed="true" closable="false" modal="true">
+        <div style="text-align:center;"><img src="{{ url_for('static', filename='images/loading.gif') }}"></div>
+        <div style="text-align:center;">loading……</div>
+    </div>
+
+    <script type="text/javascript">
+        function doSearch() {
+            $('#attribute').datagrid({
+                url: 'getAllAttributeDatagrid',
+                method: 'POST',
+                queryParams: {
+                    capability: $('#capabilityS').textbox('getValue')
+                }
+            });
+        }
+        function doEdit() {
+	        var row = $('#attribute').datagrid('getSelected');
+            if (row) {
+                $('#editAttributeDlg').dialog('open');
+                $('#attributeFormEdit').form('clear');
+                $('#idEdit').val(row.id);
+                $('#nameEdit').textbox('setValue', row.attribute);
+                $('#controlEdit').textbox('setValue', row.control);
+            }
+	    }
+	    function doSave() {
+            $('#loadingDlg').dialog('open');
+	        $('#attributeFormEdit').form('submit',{
+				url:'saveAttribute',
+				onSubmit:function(){
+					return $(this).form('enableValidation').form('validate');
+				},
+				success:function(data){
+                    $('#loadingDlg').dialog('close');
+				    if(data=='success') {
+				        // $.messager.alert('hint', 'success', 'info');
+				        $('#attribute').datagrid('reload');
+				        $('#editAttributeDlg').dialog('close');
+				    }
+				    else {
+				        $.messager.alert('hint', 'failed', 'info');
+				        $('#attribute').datagrid('reload');
+				        $('#editAttributeDlg').dialog('close');
+				    }
+				} 
+			});
+	    }
+
+        $(document).ready(function(){
+            $("#platformS").combobox({
+                editable: false,
+                panelHeight: 'auto',
+				valueField: 'id',
+    			textField: 'name',
+    			url: 'getAllPlatformJson',
+                onClick: function(item){
+                    $("#deviceS").combobox({
+                        editable: false,
+                        panelHeight: 'auto',
+                        valueField: 'id',
+                        textField: 'name',
+                        url: 'getAllDeviceJson?platform='+item.id,
+                        onClick: function(item){
+                            $("#capabilityS").combobox({
+                                editable: false,
+                                panelHeight: 'auto',
+                                valueField: 'id',
+                                textField: 'name',
+                                url: 'getAllCapabilityJson?device='+item.id
+                            })
+                        }
+                    })
+                }
+            });
+        });
+    </script>
+</body>
+</html>

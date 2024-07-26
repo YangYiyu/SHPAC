@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Script</title>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/themes/gray/easyui.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/themes/icon.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/themes/color.css') }}">
+	<script type="text/javascript" src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='js/jquery.easyui.min.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='js/locale/easyui-lang-zh_CN.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/ace-min/ace.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/ace-min/ext-language_tools.js') }}"></script>
+</head>
+<body class="easyui-layout" style="width:100%;height:100%;margin:0px;padding:0px;">
+    <div region="north" split="true" title="capability" style="height:30%;">
+        <table id="platform" class="easyui-datagrid" title="" style="width:100%;height:100%;" data-options="rownumbers:true,singleSelect:true,url:'getAllPlatformDatagrid',method:'post',pagination:true">
+            <thead>
+                <tr>
+                    <th data-options="field:'id',width:120,hidden:true">id</th>
+                    <th data-options="field:'name',width:120,align:'center'">platform</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <div region="center" split="true" title="Hook Script" style="height:70%;">
+        <div id="scriptEditor" style="width:100%;height:600px;"></div>
+    </div>
+
+    <div id="loadingDlg" class="easyui-dialog" style="width:200px;padding:10px;" data-options="" title="" closed="true" closable="false" modal="true">
+        <div style="text-align:center;"><img src="{{ url_for('static', filename='images/loading.gif') }}"></div>
+        <div style="text-align:center;">loading……</div>
+    </div>
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('#platform').datagrid({
+            	onClickRow: function(index, row) {
+                    var platformid = row["id"];
+                    $.post('getScriptFromDB', {platform:platformid},function(data,status){
+                        if(data) {
+                            ace.edit("scriptEditor").setValue(data);
+                        }
+                        else {
+                            ace.edit("scriptEditor").setValue('');
+                        }
+                    });
+            	}
+            });
+
+            var scriptEditor = ace.edit("scriptEditor");
+            scriptEditor.setTheme("ace/theme/monokai");
+            scriptEditor.session.setMode("ace/mode/javascript");
+            scriptEditor.setFontSize(14);
+        });
+    </script>
+</body>
+</html>

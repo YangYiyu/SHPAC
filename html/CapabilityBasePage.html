@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CapabilityBase</title>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/themes/gray/easyui.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/themes/icon.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/themes/color.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/default.css') }}">
+	<script type="text/javascript" src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='js/jquery.easyui.min.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='js/locale/easyui-lang-zh_CN.js') }}"></script>
+</head>
+<body style="width:100%;height:100%;margin:0px;padding:0px;">
+    <table id="capability" class="easyui-datagrid" title="" style="width:100%;height:100%;" 
+        data-options="rownumbers:true,singleSelect:true,toolbar:'#tb',pagination:true">
+        <thead>
+            <tr>
+                <th data-options="field:'id',width:120,hidden:true">id</th>
+                <th data-options="field:'platform',width:120,align:'center'">platform</th>
+                <th data-options="field:'device',width:120,align:'center'">device</th>
+                <th data-options="field:'capability',width:180,align:'center'">capability</th>
+            </tr>
+        </thead>
+    </table>
+    <div id="tb" style="padding:2px 5px;">
+        <div style="font-size:14px;padding-top: 10px;">
+            platform:&nbsp;<input class="easyui-combobox" id="platformS" style="width:100px;">
+            device:&nbsp;<input class="easyui-combobox" id="deviceS" style="width:100px;">
+            <span style="padding-left: 10px;"></span>
+            <a href="#" class="easyui-linkbutton c4" iconCls="icon-search" onclick="doSearch()" style="width:80px;">Search</a>
+            <!-- <span style="padding-left: 10px;"></span>
+            <a href="#" class="easyui-linkbutton c4" iconCls="icon-new" onclick="doOpen()" style="width:80px;">Add</a>
+            <span style="padding-left: 10px;"></span>
+            <a href="#" class="easyui-linkbutton c4" iconCls="icon-edit" onclick="doEdit()" style="width:80px;">Edit</a>
+            <span style="padding-left: 10px;"></span>
+            <a href="#" class="easyui-linkbutton c4" iconCls="icon-cancel" onclick="doDelete()" style="width:80px;">Remove</a> -->
+        </div>
+    </div>
+    <div id="ft" style="height:18px;padding:5px 5px;">
+        
+    </div>
+
+    <div id="addCapabilityDlg" class="easyui-dialog" title="Add new capability" style="width:600px;padding:10px;" data-options="
+            conCls: 'icon-new',
+            buttons: [{
+                text:'Save',
+                iconCls:'icon-ok',
+                handler:function(){
+                    doAdd();
+                }
+            }]
+        " closed="true" modal="true">
+        <form id="capabilityFormAdd" class="easyui-form" method="post" data-options="novalidate:true">
+			<table cellpadding="5" >
+	    		<tr>
+	    		    <td>platform:</td>
+	    		    <td><input class="easyui-textbox" type="text" id="platformAdd" name="platform" data-options="required:true" panelHeight="auto"></input></td>
+	    		</tr>
+                <tr>
+	    		    <td>device:</td>
+	    		    <td><input class="easyui-textbox" type="text" id="deviceAdd" name="device" data-options="required:true" panelHeight="auto"></input></td>
+	    		</tr>
+                <tr>
+	    		    <td>capability name:</td>
+	    		    <td><input class="easyui-textbox" type="text" id="nameAdd" name="name" data-options="required:true" panelHeight="auto"></input></td>
+	    		</tr>
+                <tr>
+	    		    <td>capability attribute:</td>
+	    		    <td><input class="easyui-textbox" type="text" id="attributeAdd" name="attribute" data-options="required:true" panelHeight="auto"></input></td>
+	    		</tr>
+                <tr>
+	    		    <td>capability value:</td>
+	    		    <td><input class="easyui-textbox" type="text" id="valueAdd" name="value" panelHeight="auto"></input></td>
+	    		</tr>
+	    		<tr>
+	    		    <td style="margin-top:10px;">remark:</td>
+	    		    <td style="margin-top:10px;"><input class="easyui-textbox" type="text" id="remarkAdd" name="remark" data-options="multiline:true" style="width:480px;height:100px;" maxlength="500"></input></td>
+	    		</tr>
+	    	</table>
+        </form>
+    </div>
+
+    <div id="editCapabilityDlg" class="easyui-dialog" title="Edit capability" style="width:600px;padding:10px;" data-options="
+            conCls: 'icon-edit',
+            buttons: [{
+                text:'Save',
+                iconCls:'icon-ok',
+                handler:function(){
+                    doSave();
+                }
+            }]
+        " closed="true" modal="true">
+        <form id="capabilityFormEdit" class="easyui-form" method="post" data-options="novalidate:true">
+			<input type="hidden" id="idEdit" name="id" >
+            <table cellpadding="5" >
+	    		<tr>
+	    		    <td>platform:</td>
+	    		    <td><input class="easyui-textbox" type="text" id="platformEdit" name="platform" data-options="required:true" panelHeight="auto"></input></td>
+	    		</tr>
+                <tr>
+	    		    <td>device:</td>
+	    		    <td><input class="easyui-textbox" type="text" id="deviceEdit" name="device" data-options="required:true" panelHeight="auto"></input></td>
+	    		</tr>
+                <tr>
+	    		    <td>capability name:</td>
+	    		    <td><input class="easyui-textbox" type="text" id="nameEdit" name="name" data-options="required:true" panelHeight="auto"></input></td>
+	    		</tr>
+                <tr>
+	    		    <td>capability attribute:</td>
+	    		    <td><input class="easyui-textbox" type="text" id="attributeEdit" name="attribute" data-options="required:true" panelHeight="auto"></input></td>
+	    		</tr>
+                <tr>
+	    		    <td>capability value:</td>
+	    		    <td><input class="easyui-textbox" type="text" id="valueEdit" name="value" panelHeight="auto"></input></td>
+	    		</tr>
+	    		<tr>
+	    		    <td style="margin-top:10px;">remark:</td>
+	    		    <td style="margin-top:10px;"><input class="easyui-textbox" type="text" id="remarkEdit" name="remark" data-options="multiline:true" style="width:480px;height:100px;" maxlength="500"></input></td>
+	    		</tr>
+	    	</table>
+        </form>
+    </div>
+
+    <div id="loadingDlg" class="easyui-dialog" style="width:200px;padding:10px;" data-options="" title="" closed="true" closable="false" modal="true">
+        <div style="text-align:center;"><img src="{{ url_for('static', filename='images/loading.gif') }}"></div>
+        <div style="text-align:center;">loading……</div>
+    </div>
+
+    <script type="text/javascript">
+        function doSearch() {
+            $('#capability').datagrid({
+                url: 'getAllCapabilityDatagrid',
+                method: 'POST',
+                queryParams: {
+                    platform: $('#platformS').combobox('getValue'),
+                    device: $('#deviceS').combobox('getValue')
+                }
+            });
+        }        
+        function doOpen() {
+	        $('#addCapabilityDlg').dialog('open');
+	        $('#capabilityFormAdd').form('clear');
+	    }
+	    function doAdd() {
+            $('#loadingDlg').dialog('open');
+	        $('#capabilityFormAdd').form('submit',{
+				url:'addCapability',
+				onSubmit:function(){
+					return $(this).form('enableValidation').form('validate');
+				},
+				success:function(data){
+                    $('#loadingDlg').dialog('close');
+				    if(data=='success') {
+				        // $.messager.alert('hint', 'success', 'info');
+				        $('#addCapabilityDlg').dialog('close');
+				        $('#capability').datagrid('reload');
+				    }
+				    else {
+				        $.messager.alert('hint', 'failed', 'info');
+				        $('#addCapabilityDlg').dialog('close');
+				        $('#capability').datagrid('reload');
+				    }
+				} 
+			});
+	    }
+	    function doEdit() {
+	        var row = $('#capability').datagrid('getSelected');
+            if (row) {
+                $('#editCapabilityDlg').dialog('open');
+                $('#capabilityFormEdit').form('clear');
+                $('#capabilityFormEdit').form('load', row);
+            }
+	    }
+	    function doSave() {
+            $('#loadingDlg').dialog('open');
+	        $('#capabilityFormEdit').form('submit',{
+				url:'saveCapability',
+				onSubmit:function(){
+					return $(this).form('enableValidation').form('validate');
+				},
+				success:function(data){
+                    $('#loadingDlg').dialog('close');
+				    if(data=='success') {
+				        // $.messager.alert('hint', 'success', 'info');
+				        $('#capability').datagrid('reload');
+				        $('#editCapabilityDlg').dialog('close');
+				    }
+				    else {
+				        $.messager.alert('hint', 'failed', 'info');
+				        $('#capability').datagrid('reload');
+				        $('#editCapabilityDlg').dialog('close');
+				    }
+				} 
+			});
+	    }
+	    function doDelete() {
+            var row = $('#capability').datagrid('getSelected');
+            if(row == null) {
+                $.messager.alter('hint','Plesae select one row','info');
+            }
+            if (row) {
+                $.messager.confirm('confirm', 'Are you sure about deleting?', function (r) {
+                    if (r) {
+                        $('#loadingDlg').dialog('open');
+                        $.post('deleteCapabilityDo.action', { id: row.id }, function (result) {
+                            $('#loadingDlg').dialog('close');
+                            if (result=='success') {
+                                $('#capability').datagrid('clearSelections'); //清空选中的行  
+                                $.messager.alert('hint', 'success', 'info'); 
+                                $('#capability').datagrid('reload');    // reload the data 
+                            } else {
+                                $.messager.show({   // show error message 
+                                    title: 'Error',
+                                    msg: result
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+        }  
+
+        $(document).ready(function(){
+            $("#platformS").combobox({
+                editable: false,
+                panelHeight: 'auto',
+				valueField: 'id',
+    			textField: 'name',
+    			url: 'getAllPlatformJson',
+                onClick: function(item){
+                    $("#deviceS").combobox({
+                        editable: false,
+                        panelHeight: 'auto',
+                        valueField: 'id',
+                        textField: 'name',
+                        url: 'getAllDeviceJson?platform='+item.id
+                    })
+                }
+            });
+        });
+    </script>
+</body>
+</html>

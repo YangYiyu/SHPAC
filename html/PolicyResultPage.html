@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>PolicyResult</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/themes/metro/easyui.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/themes/mobile.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/themes/icon.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/themes/color.css') }}">
+	<script type="text/javascript" src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='js/jquery.easyui.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.easyui.mobile.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.color.js') }}"></script>
+    <style>
+        .m-list .m-list-group {
+            background-color: #c9c7c7;
+        }
+    </style>
+    <style type="text/css" mce_bogus="1">  
+        table td{
+            white-space:pre-wrap;
+            word-wrap: break-word;
+        }
+          
+        table th{
+            white-space:pre-wrap;
+            word-wrap: break-word;
+        }
+    </style>
+  </head>
+  <body>
+    <div id="main" class="easyui-navpanel">
+        <header>
+            <div class="m-toolbar">
+                <div class="m-title">{{ session.get("valid_user") }}'s policies</div>
+                <div class="m-left">
+                    <a href="javascript:void(0)" class="easyui-linkbutton m-back" plain="true" outline="true" onclick="$.mobile.back()">back</a>
+                </div>
+            </div>
+        </header>
+        <div class="easyui-accordion" fit="true" border="false">
+            <div title="Policies related to {{ session.get('valid_user') }}">
+                <div class="easyui-navpanel">
+                    <ul class="m-list">
+                        {% for p in policy_list["related_policy_list"] %}
+                        <li>
+                            <table id="related_policy" style="width:100%;" border="1" cellspacing="0">
+                                <tr>
+                                    <td>name:</td>
+                                    <td>{{ p.name }}</td>
+                                </tr>
+                                <tr>
+                                    <td>user:</td>
+                                    <td>{{ p.user }}</td>
+                                </tr>
+                                <tr>
+                                    <td>device:</td>
+                                    <td>{{ p.device }}</td>
+                                </tr>
+                                <tr>
+                                    <td>capability:</td>
+                                    <td>{{ p.capability }}</td>
+                                </tr>
+                                <tr>
+                                    <td>status_permit:</td>
+                                    <td>{{ p.status_permit }}</td>
+                                </tr>
+                                <tr>
+                                    <td>action_permit:</td>
+                                    <td>{{ p.action_permit }}</td>
+                                </tr>
+                                <tr>
+                                    <td>attri_permit:</td>
+                                    <td>{{ p.attri_permit }}</td>
+                                </tr>
+                                <tr>
+                                    <td>time_condition:</td>
+                                    <td>{{ p.time_condition }}</td>
+                                </tr>
+                                <tr>
+                                    <td>location_condition:</td>
+                                    <td>{{ p.location_condition }}</td>
+                                </tr>
+                                <tr>
+                                    <td>attri_condition:</td>
+                                    <td>{{ p.attri_condition }}</td>
+                                </tr>
+                                <tr>
+                                    <td>level:</td>
+                                    <td>{{ p.level }}</td>
+                                </tr>
+                                <tr>
+                                    <td>submitter:</td>
+                                    <td>{{ p.submitter }}</td>
+                                </tr>
+                                <tr>
+                                    <td>state:</td>
+                                    <td style="color:{{ "green" if p.state=="accept" else "red" }};font-weight: bold;">{{ p.state }}</td>
+                                </tr>
+                            </table>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <div title="Policies submitted by {{ session.get('valid_user') }}">
+                <div class="easyui-navpanel">
+                    <ul class="m-list">
+                        {% for p in policy_list["submitted_policy_list"] %}
+                        <li>
+                            <table id="submitted_policy" style="width:100%;" border="1" cellspacing="0">
+                                <tr>
+                                    <td>name:</td>
+                                    <td>{{ p.name }}</td>
+                                </tr>
+                                <tr>
+                                    <td>user:</td>
+                                    <td>{{ p.user }}</td>
+                                </tr>
+                                <tr>
+                                    <td>device:</td>
+                                    <td>{{ p.device }}</td>
+                                </tr>
+                                <tr>
+                                    <td>capability:</td>
+                                    <td>{{ p.capability }}</td>
+                                </tr>
+                                <tr>
+                                    <td>status_permit:</td>
+                                    <td>{{ p.status_permit }}</td>
+                                </tr>
+                                <tr>
+                                    <td>action_permit:</td>
+                                    <td>{{ p.action_permit }}</td>
+                                </tr>
+                                <tr>
+                                    <td>attri_permit:</td>
+                                    <td>{{ p.attri_permit }}</td>
+                                </tr>
+                                <tr>
+                                    <td>time_condition:</td>
+                                    <td>{{ p.time_condition }}</td>
+                                </tr>
+                                <tr>
+                                    <td>location_condition:</td>
+                                    <td>{{ p.location_condition }}</td>
+                                </tr>
+                                <tr>
+                                    <td>attri_condition:</td>
+                                    <td>{{ p.attri_condition }}</td>
+                                </tr>
+                                <tr>
+                                    <td>level:</td>
+                                    <td>{{ p.level }}</td>
+                                </tr>
+                                <tr>
+                                    <td>submitter:</td>
+                                    <td>{{ p.submitter }}</td>
+                                </tr>
+                                <tr>
+                                    <td>state:</td>
+                                    <td>
+                                        {% if p.state=="accept" %} 
+                                        <span style="color: green;font-weight: bold;">{{ p.state }}</span>
+                                        {% endif %}
+                                        {% if p.state!="accept" %} 
+                                        <span style="color: red;font-weight: bold;">{{ p.state }}</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            </table>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+        
+    <div id="loadingDlg" class="easyui-dialog" style="width:95%;padding:10px;" data-options="" title="" closed="true" closable="false" modal="true">
+        <div style="text-align:center;"><img src="{{ url_for('static', filename='images/loading.gif') }}"></div>
+        <div style="text-align:center;">waitting……</div>
+    </div>
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $.parser.parse($("#related_policy"));
+            $.parser.parse($("#submitted_policy"));
+        });
+    </script>
+  </body>
+</html>

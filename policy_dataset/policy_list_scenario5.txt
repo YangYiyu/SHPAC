@@ -1,0 +1,550 @@
+policy name: p0
+user: ['Alice']
+device: ['camera1']
+capability: ['camera1.sensor']
+status_permit: True
+action_permit: True
+attri_permit: {}
+time_condition: [['2024-01-14 03:46:58', '2024-01-16 07:06:22']]
+location_condition: ['any']
+attri_condition: {'camera1.sensor.people': True}
+
+policy name: p1
+user: ['Alice']
+device: ['camera1']
+capability: ['camera1.video']
+status_permit: True
+action_permit: True
+attri_permit: {}
+time_condition: [['2024-01-11 23:49:27', '2024-01-14 07:39:34'], ['2024-01-08 10:35:01', '2024-01-10 22:14:59']]
+location_condition: ['any']
+attri_condition: {}
+
+policy name: p2
+user: ['Alice']
+device: ['lock1']
+capability: ['lock1.lock']
+status_permit: True
+action_permit: False
+attri_permit: {'lock1.lock.setlock': False}
+time_condition: [['2024-01-11 20:08:38', '2024-01-13 12:19:25'], ['2024-01-08 02:52:08', '2024-01-10 12:08:20']]
+location_condition: ['any']
+attri_condition: {'lock1.lock.setlock': True}
+
+policy name: p3
+user: ['Alice']
+device: ['smoke1']
+capability: ['smoke1.sensor']
+status_permit: True
+action_permit: False
+attri_permit: {}
+time_condition: ['any']
+location_condition: ['any']
+attri_condition: {}
+
+policy name: p4
+user: ['Alice']
+device: ['lock1']
+capability: ['lock1.lock']
+status_permit: False
+action_permit: False
+attri_permit: {'lock1.lock.setlock': False}
+time_condition: [['2024-01-09 23:01:58', '2024-01-10 19:15:32']]
+location_condition: ['any']
+attri_condition: {}
+
+policy name: p5
+user: ['Alice']
+device: ['camera1']
+capability: ['camera1.feature']
+status_permit: False
+action_permit: False
+attri_permit: {'camera1.feature.lampswitch': False, 'camera1.feature.setpassword': True}
+time_condition: [['2024-01-08 01:27:18', '2024-01-09 21:39:53'], ['2024-01-09 19:39:07', '2024-01-13 06:13:10']]
+location_condition: ['school']
+attri_condition: {}
+
+policy name: p6
+user: ['Alice']
+device: ['smoke1']
+capability: ['smoke1.sensor']
+status_permit: True
+action_permit: False
+attri_permit: {}
+time_condition: ['any']
+location_condition: ['any']
+attri_condition: {}
+
+policy name: p7
+user: ['Alice']
+device: ['light1']
+capability: ['light1.light']
+status_permit: True
+action_permit: False
+attri_permit: {'light1.light.color': [[397076, 656452]], 'light1.light.switch': True}
+time_condition: [['2024-01-16 15:32:59', '2024-01-16 16:03:42']]
+location_condition: ['any']
+attri_condition: {'light1.light.color': [[363433, 418085]], 'light1.light.switch': True}
+
+policy name: p8
+user: ['Alice']
+device: ['plug1']
+capability: ['plug1.feature']
+status_permit: False
+action_permit: False
+attri_permit: {}
+time_condition: [['2024-01-10 11:23:39', '2024-01-13 11:57:40']]
+location_condition: ['any']
+attri_condition: {'plug1.feature.timeduration': [[13, 24]]}
+
+policy name: p9
+user: ['Alice']
+device: ['motion1']
+capability: ['motion1.sensor']
+status_permit: False
+action_permit: True
+attri_permit: {'motion1.sensor.hasmotion': True}
+time_condition: ['any']
+location_condition: ['school']
+attri_condition: {}
+
+policy name: p10
+user: ['Alice']
+device: ['motion1']
+capability: ['motion1.sensor']
+status_permit: False
+action_permit: True
+attri_permit: {}
+time_condition: ['any']
+location_condition: ['home']
+attri_condition: {}
+
+policy name: p11
+user: ['Alice']
+device: ['smoke1']
+capability: ['smoke1.sensor']
+status_permit: True
+action_permit: False
+attri_permit: {'smoke1.sensor.hassmoke': False}
+time_condition: [['2024-01-16 03:52:33', '2024-01-16 08:09:34'], ['2024-01-14 06:38:44', '2024-01-15 23:38:55']]
+location_condition: ['home']
+attri_condition: {'smoke1.sensor.hassmoke': True}
+
+policy name: p12
+user: ['Alice']
+device: ['motion1']
+capability: ['motion1.sensor']
+status_permit: False
+action_permit: False
+attri_permit: {}
+time_condition: ['any']
+location_condition: ['any']
+attri_condition: {'motion1.sensor.hasmotion': True}
+
+policy name: p13
+user: ['Alice']
+device: ['lock1']
+capability: ['lock1.lock']
+status_permit: True
+action_permit: False
+attri_permit: {'lock1.lock.setlock': False}
+time_condition: ['any']
+location_condition: ['any']
+attri_condition: {}
+
+policy name: p14
+user: ['Alice']
+device: ['camera1']
+capability: ['camera1.feature']
+status_permit: False
+action_permit: False
+attri_permit: {}
+time_condition: ['any']
+location_condition: ['company']
+attri_condition: {'camera1.feature.aiswitch': True}
+
+policy name: p15
+user: ['Alice']
+device: ['camera1']
+capability: ['camera1.video']
+status_permit: True
+action_permit: False
+attri_permit: {}
+time_condition: ['any']
+location_condition: ['home']
+attri_condition: {}
+
+policy name: p16
+user: ['Alice']
+device: ['smoke1']
+capability: ['smoke1.sensor']
+status_permit: False
+action_permit: True
+attri_permit: {'smoke1.sensor.hassmoke': False}
+time_condition: ['any']
+location_condition: ['any']
+attri_condition: {}
+
+policy name: p17
+user: ['Alice']
+device: ['motion1']
+capability: ['motion1.sensor']
+status_permit: False
+action_permit: False
+attri_permit: {'motion1.sensor.hasmotion': True}
+time_condition: ['any']
+location_condition: ['any']
+attri_condition: {}
+
+policy name: p18
+user: ['Alice']
+device: ['lock1']
+capability: ['lock1.lock']
+status_permit: False
+action_permit: True
+attri_permit: {'lock1.lock.setlock': True}
+time_condition: [['2024-01-10 14:34:23', '2024-01-12 00:40:39']]
+location_condition: ['company']
+attri_condition: {}
+
+policy name: p19
+user: ['Alice']
+device: ['light1']
+capability: ['light1.light']
+status_permit: True
+action_permit: False
+attri_permit: {'light1.light.bright': [[80, 84]], 'light1.light.switch': True}
+time_condition: ['any']
+location_condition: ['any']
+attri_condition: {}
+
+policy name: p20
+user: ['Alice']
+device: ['light1']
+capability: ['light1.light']
+status_permit: True
+action_permit: True
+attri_permit: {'light1.light.bright': [[43, 55]]}
+time_condition: [['2024-01-09 20:09:45', '2024-01-16 23:54:02']]
+location_condition: ['company']
+attri_condition: {'light1.light.bright': [[83, 90]]}
+
+policy name: p21
+user: ['Alice']
+device: ['plug1']
+capability: ['plug1.switch']
+status_permit: False
+action_permit: True
+attri_permit: {'plug1.switch.switch': True}
+time_condition: ['any']
+location_condition: ['any']
+attri_condition: {'plug1.switch.switch': True}
+
+policy name: p22
+user: ['Alice']
+device: ['plug1']
+capability: ['plug1.switch']
+status_permit: True
+action_permit: True
+attri_permit: {}
+time_condition: [['2024-01-11 00:13:12', '2024-01-11 03:02:58']]
+location_condition: ['any']
+attri_condition: {'plug1.switch.switch': True}
+
+policy name: p23
+user: ['Alice']
+device: ['smoke1']
+capability: ['smoke1.sensor']
+status_permit: False
+action_permit: True
+attri_permit: {'smoke1.sensor.hassmoke': False}
+time_condition: ['any']
+location_condition: ['school']
+attri_condition: {'smoke1.sensor.hassmoke': True}
+
+policy name: p24
+user: ['Alice']
+device: ['plug1']
+capability: ['plug1.feature']
+status_permit: True
+action_permit: True
+attri_permit: {'plug1.feature.timeduration': [[14, 18]]}
+time_condition: [['2024-01-14 08:58:31', '2024-01-14 23:38:26']]
+location_condition: ['company']
+attri_condition: {'plug1.feature.timeduration': [[10, 23]]}
+
+policy name: p25
+user: ['Alice']
+device: ['light1']
+capability: ['light1.light']
+status_permit: False
+action_permit: True
+attri_permit: {}
+time_condition: [['2024-01-10 00:02:34', '2024-01-14 23:24:52'], ['2024-01-11 19:22:35', '2024-01-14 17:51:22']]
+location_condition: ['any']
+attri_condition: {'light1.light.color': [[527493, 603406]], 'light1.light.switch': True}
+
+policy name: p26
+user: ['Alice']
+device: ['motion1']
+capability: ['motion1.sensor']
+status_permit: False
+action_permit: False
+attri_permit: {'motion1.sensor.hasmotion': True}
+time_condition: [['2024-01-08 16:43:57', '2024-01-12 01:37:45']]
+location_condition: ['any']
+attri_condition: {}
+
+policy name: p27
+user: ['Alice']
+device: ['camera1']
+capability: ['camera1.video']
+status_permit: False
+action_permit: True
+attri_permit: {}
+time_condition: [['2024-01-07 19:36:30', '2024-01-08 08:45:02'], ['2024-01-12 20:20:11', '2024-01-14 13:59:49']]
+location_condition: ['any']
+attri_condition: {'camera1.video.timeduration': [[9, 17]]}
+
+policy name: p28
+user: ['Alice']
+device: ['light1']
+capability: ['light1.light']
+status_permit: True
+action_permit: False
+attri_permit: {}
+time_condition: [['2024-01-12 04:51:16', '2024-01-13 10:58:02']]
+location_condition: ['company']
+attri_condition: {}
+
+policy name: p29
+user: ['Alice']
+device: ['motion1']
+capability: ['motion1.sensor']
+status_permit: False
+action_permit: True
+attri_permit: {'motion1.sensor.hasmotion': True}
+time_condition: ['any']
+location_condition: ['any']
+attri_condition: {}
+
+policy name: p30
+user: ['Alice']
+device: ['camera1']
+capability: ['camera1.feature']
+status_permit: True
+action_permit: True
+attri_permit: {}
+time_condition: [['2024-01-08 00:46:29', '2024-01-12 11:36:11'], ['2024-01-09 21:00:35', '2024-01-16 03:52:45']]
+location_condition: ['home']
+attri_condition: {}
+
+policy name: p31
+user: ['Alice']
+device: ['motion1']
+capability: ['motion1.sensor']
+status_permit: True
+action_permit: True
+attri_permit: {'motion1.sensor.hasmotion': False}
+time_condition: [['2024-01-12 21:54:47', '2024-01-16 03:55:39'], ['2024-01-11 08:19:28', '2024-01-16 14:07:22']]
+location_condition: ['company']
+attri_condition: {'motion1.sensor.hasmotion': True}
+
+policy name: p32
+user: ['Alice']
+device: ['motion1']
+capability: ['motion1.sensor']
+status_permit: True
+action_permit: False
+attri_permit: {}
+time_condition: [['2024-01-14 18:10:13', '2024-01-16 10:38:46']]
+location_condition: ['any']
+attri_condition: {'motion1.sensor.hasmotion': True}
+
+policy name: p33
+user: ['Alice']
+device: ['plug1']
+capability: ['plug1.feature']
+status_permit: False
+action_permit: True
+attri_permit: {'plug1.feature.timeduration': [[15, 21]]}
+time_condition: [['2024-01-09 13:21:27', '2024-01-15 10:24:02']]
+location_condition: ['any']
+attri_condition: {'plug1.feature.timeduration': [[3, 4]]}
+
+policy name: p34
+user: ['Alice']
+device: ['light1']
+capability: ['light1.light']
+status_permit: True
+action_permit: True
+attri_permit: {'light1.light.bright': [[19, 20]], 'light1.light.color': [[300419, 332380]]}
+time_condition: ['any']
+location_condition: ['company']
+attri_condition: {'light1.light.color': [[367469, 625178]], 'light1.light.bright': [[49, 64]]}
+
+policy name: p35
+user: ['Alice']
+device: ['light1']
+capability: ['light1.light']
+status_permit: True
+action_permit: False
+attri_permit: {'light1.light.bright': [[28, 53]]}
+time_condition: ['any']
+location_condition: ['company']
+attri_condition: {}
+
+policy name: p36
+user: ['Alice']
+device: ['lock1']
+capability: ['lock1.lock']
+status_permit: False
+action_permit: True
+attri_permit: {'lock1.lock.setlock': False}
+time_condition: [['2024-01-07 18:23:02', '2024-01-07 23:48:23'], ['2024-01-12 12:38:31', '2024-01-13 00:33:17']]
+location_condition: ['any']
+attri_condition: {}
+
+policy name: p37
+user: ['Alice']
+device: ['smoke1']
+capability: ['smoke1.sensor']
+status_permit: True
+action_permit: True
+attri_permit: {}
+time_condition: [['2024-01-08 09:42:38', '2024-01-16 09:24:46'], ['2024-01-10 05:07:01', '2024-01-14 01:30:22']]
+location_condition: ['any']
+attri_condition: {}
+
+policy name: p38
+user: ['Alice']
+device: ['plug1']
+capability: ['plug1.switch']
+status_permit: True
+action_permit: False
+attri_permit: {'plug1.switch.switch': False}
+time_condition: ['any']
+location_condition: ['home']
+attri_condition: {}
+
+policy name: p39
+user: ['Alice']
+device: ['lock1']
+capability: ['lock1.lock']
+status_permit: True
+action_permit: False
+attri_permit: {}
+time_condition: ['any']
+location_condition: ['company']
+attri_condition: {'lock1.lock.setlock': True}
+
+policy name: p40
+user: ['Alice']
+device: ['lock1']
+capability: ['lock1.lock']
+status_permit: False
+action_permit: False
+attri_permit: {'lock1.lock.setlock': True}
+time_condition: [['2024-01-10 11:03:14', '2024-01-13 16:16:56'], ['2024-01-16 15:35:43', '2024-01-16 23:09:15']]
+location_condition: ['any']
+attri_condition: {'lock1.lock.setlock': True}
+
+policy name: p41
+user: ['Alice']
+device: ['light1']
+capability: ['light1.light']
+status_permit: True
+action_permit: False
+attri_permit: {}
+time_condition: [['2024-01-15 04:16:02', '2024-01-16 21:09:45'], ['2024-01-11 19:39:24', '2024-01-16 18:04:01']]
+location_condition: ['school']
+attri_condition: {}
+
+policy name: p42
+user: ['Alice']
+device: ['lock1']
+capability: ['lock1.lock']
+status_permit: True
+action_permit: True
+attri_permit: {}
+time_condition: ['any']
+location_condition: ['school']
+attri_condition: {}
+
+policy name: p43
+user: ['Alice']
+device: ['motion1']
+capability: ['motion1.sensor']
+status_permit: True
+action_permit: True
+attri_permit: {'motion1.sensor.hasmotion': False}
+time_condition: ['any']
+location_condition: ['home']
+attri_condition: {'motion1.sensor.hasmotion': True}
+
+policy name: p44
+user: ['Alice']
+device: ['camera1']
+capability: ['camera1.sensor']
+status_permit: True
+action_permit: False
+attri_permit: {}
+time_condition: [['2024-01-13 08:43:52', '2024-01-14 22:15:37']]
+location_condition: ['school']
+attri_condition: {'camera1.sensor.people': True}
+
+policy name: p45
+user: ['Alice']
+device: ['lock1']
+capability: ['lock1.lock']
+status_permit: False
+action_permit: True
+attri_permit: {}
+time_condition: ['any']
+location_condition: ['any']
+attri_condition: {'lock1.lock.setlock': True}
+
+policy name: p46
+user: ['Alice']
+device: ['smoke1']
+capability: ['smoke1.sensor']
+status_permit: True
+action_permit: False
+attri_permit: {}
+time_condition: [['2024-01-14 21:50:07', '2024-01-15 14:02:50']]
+location_condition: ['any']
+attri_condition: {}
+
+policy name: p47
+user: ['Alice']
+device: ['light1']
+capability: ['light1.light']
+status_permit: True
+action_permit: True
+attri_permit: {'light1.light.switch': True, 'light1.light.color': [[298643, 627826]]}
+time_condition: ['any']
+location_condition: ['any']
+attri_condition: {}
+
+policy name: p48
+user: ['Alice']
+device: ['camera1']
+capability: ['camera1.sensor']
+status_permit: False
+action_permit: False
+attri_permit: {}
+time_condition: ['any']
+location_condition: ['any']
+attri_condition: {'camera1.sensor.people': True}
+
+policy name: p49
+user: ['Alice']
+device: ['smoke1']
+capability: ['smoke1.sensor']
+status_permit: False
+action_permit: True
+attri_permit: {'smoke1.sensor.hassmoke': True}
+time_condition: ['any']
+location_condition: ['company']
+attri_condition: {'smoke1.sensor.hassmoke': True}
+

@@ -1,0 +1,550 @@
+policy name: p0
+user: ['Gary']
+device: ['light1']
+capability: ['light1.light']
+status_permit: False
+action_permit: False
+attri_permit: {'light1.light.color': [[602542, 629327]], 'light1.light.switch': True}
+time_condition: [['2024-01-14 04:02:38', '2024-01-16 00:04:42'], ['2024-01-07 08:31:36', '2024-01-09 22:40:47']]
+location_condition: ['any']
+attri_condition: {}
+
+policy name: p1
+user: ['Alice']
+device: ['light1']
+capability: ['light1.light']
+status_permit: False
+action_permit: False
+attri_permit: {}
+time_condition: [['2024-01-10 11:13:20', '2024-01-16 01:04:32'], ['2024-01-09 19:19:02', '2024-01-12 19:47:56']]
+location_condition: ['company']
+attri_condition: {}
+
+policy name: p2
+user: ['Gary']
+device: ['light1']
+capability: ['light1.light']
+status_permit: True
+action_permit: True
+attri_permit: {'light1.light.bright': [[21, 68]], 'light1.light.color': [[463381, 675214]]}
+time_condition: ['any']
+location_condition: ['any']
+attri_condition: {}
+
+policy name: p3
+user: ['Bob']
+device: ['light1']
+capability: ['light1.light']
+status_permit: True
+action_permit: False
+attri_permit: {'light1.light.color': [[633418, 763617]], 'light1.light.switch': False}
+time_condition: ['any']
+location_condition: ['any']
+attri_condition: {}
+
+policy name: p4
+user: ['Gary']
+device: ['light1']
+capability: ['light1.light']
+status_permit: True
+action_permit: True
+attri_permit: {}
+time_condition: [['2024-01-15 10:42:47', '2024-01-15 22:59:36'], ['2024-01-13 03:04:03', '2024-01-16 04:34:40']]
+location_condition: ['any']
+attri_condition: {'light1.light.bright': [[62, 84]]}
+
+policy name: p5
+user: ['Alice']
+device: ['light1']
+capability: ['light1.light']
+status_permit: True
+action_permit: False
+attri_permit: {}
+time_condition: [['2024-01-07 03:29:49', '2024-01-10 09:14:16'], ['2024-01-07 01:36:20', '2024-01-15 09:42:17']]
+location_condition: ['any']
+attri_condition: {'light1.light.bright': [[59, 96]], 'light1.light.switch': True}
+
+policy name: p6
+user: ['Bob']
+device: ['light1']
+capability: ['light1.light']
+status_permit: False
+action_permit: False
+attri_permit: {'light1.light.switch': False, 'light1.light.bright': [[34, 96]]}
+time_condition: [['2024-01-11 09:19:33', '2024-01-12 04:01:20']]
+location_condition: ['company']
+attri_condition: {'light1.light.bright': [[78, 97]], 'light1.light.switch': True}
+
+policy name: p7
+user: ['Bob']
+device: ['light1']
+capability: ['light1.light']
+status_permit: False
+action_permit: True
+attri_permit: {'light1.light.switch': True, 'light1.light.color': [[756961, 770021]]}
+time_condition: ['any']
+location_condition: ['company']
+attri_condition: {'light1.light.switch': True}
+
+policy name: p8
+user: ['Alice']
+device: ['light1']
+capability: ['light1.light']
+status_permit: False
+action_permit: False
+attri_permit: {'light1.light.color': [[573863, 644005]]}
+time_condition: ['any']
+location_condition: ['any']
+attri_condition: {}
+
+policy name: p9
+user: ['Gary']
+device: ['light1']
+capability: ['light1.light']
+status_permit: True
+action_permit: True
+attri_permit: {'light1.light.color': [[385058, 698360]]}
+time_condition: [['2024-01-16 16:49:07', '2024-01-16 22:58:05'], ['2024-01-16 18:45:03', '2024-01-16 20:55:28']]
+location_condition: ['any']
+attri_condition: {}
+
+policy name: p10
+user: ['Alice']
+device: ['light1']
+capability: ['light1.light']
+status_permit: False
+action_permit: True
+attri_permit: {}
+time_condition: [['2024-01-13 16:53:38', '2024-01-16 00:23:25']]
+location_condition: ['company']
+attri_condition: {'light1.light.bright': [[59, 61]], 'light1.light.color': [[374861, 719095]]}
+
+policy name: p11
+user: ['Gary']
+device: ['light1']
+capability: ['light1.light']
+status_permit: False
+action_permit: True
+attri_permit: {'light1.light.switch': True, 'light1.light.color': [[569812, 734485]]}
+time_condition: [['2024-01-16 03:17:01', '2024-01-16 04:20:00']]
+location_condition: ['any']
+attri_condition: {'light1.light.switch': True, 'light1.light.bright': [[87, 90]]}
+
+policy name: p12
+user: ['Bob']
+device: ['light1']
+capability: ['light1.light']
+status_permit: False
+action_permit: False
+attri_permit: {'light1.light.switch': False, 'light1.light.color': [[768308, 770690]]}
+time_condition: ['any']
+location_condition: ['any']
+attri_condition: {'light1.light.color': [[692433, 761994]]}
+
+policy name: p13
+user: ['Alice']
+device: ['light1']
+capability: ['light1.light']
+status_permit: True
+action_permit: False
+attri_permit: {'light1.light.bright': [[77, 80]]}
+time_condition: [['2024-01-12 06:23:20', '2024-01-12 21:56:37'], ['2024-01-13 17:40:11', '2024-01-14 00:57:14']]
+location_condition: ['any']
+attri_condition: {}
+
+policy name: p14
+user: ['Gary']
+device: ['light1']
+capability: ['light1.light']
+status_permit: True
+action_permit: True
+attri_permit: {}
+time_condition: [['2024-01-13 00:43:49', '2024-01-14 11:42:13']]
+location_condition: ['any']
+attri_condition: {}
+
+policy name: p15
+user: ['Alice']
+device: ['light1']
+capability: ['light1.light']
+status_permit: False
+action_permit: False
+attri_permit: {'light1.light.switch': False, 'light1.light.bright': [[66, 87]]}
+time_condition: [['2024-01-08 04:14:36', '2024-01-15 20:28:45'], ['2024-01-10 04:13:22', '2024-01-12 18:55:05']]
+location_condition: ['any']
+attri_condition: {'light1.light.switch': True, 'light1.light.color': [[597685, 644903]]}
+
+policy name: p16
+user: ['Bob']
+device: ['light1']
+capability: ['light1.light']
+status_permit: True
+action_permit: False
+attri_permit: {'light1.light.bright': [[95, 98]], 'light1.light.switch': True}
+time_condition: [['2024-01-13 02:09:12', '2024-01-16 09:56:56'], ['2024-01-11 00:02:47', '2024-01-14 23:51:02']]
+location_condition: ['any']
+attri_condition: {'light1.light.switch': True, 'light1.light.color': [[371456, 771373]]}
+
+policy name: p17
+user: ['Alice']
+device: ['light1']
+capability: ['light1.light']
+status_permit: True
+action_permit: False
+attri_permit: {}
+time_condition: ['any']
+location_condition: ['home']
+attri_condition: {}
+
+policy name: p18
+user: ['Bob']
+device: ['light1']
+capability: ['light1.light']
+status_permit: False
+action_permit: False
+attri_permit: {}
+time_condition: [['2024-01-11 05:07:57', '2024-01-14 11:54:47']]
+location_condition: ['any']
+attri_condition: {'light1.light.color': [[269471, 574189]]}
+
+policy name: p19
+user: ['Bob']
+device: ['light1']
+capability: ['light1.light']
+status_permit: True
+action_permit: False
+attri_permit: {}
+time_condition: [['2024-01-07 12:10:40', '2024-01-10 17:43:23']]
+location_condition: ['home']
+attri_condition: {'light1.light.bright': [[75, 80]]}
+
+policy name: p20
+user: ['Gary']
+device: ['light1']
+capability: ['light1.light']
+status_permit: False
+action_permit: False
+attri_permit: {'light1.light.color': [[356786, 480758]]}
+time_condition: [['2024-01-12 22:41:22', '2024-01-14 11:32:01'], ['2024-01-14 22:11:52', '2024-01-14 22:21:56']]
+location_condition: ['any']
+attri_condition: {'light1.light.bright': [[72, 90]]}
+
+policy name: p21
+user: ['Alice']
+device: ['light1']
+capability: ['light1.light']
+status_permit: True
+action_permit: False
+attri_permit: {}
+time_condition: [['2024-01-07 17:12:37', '2024-01-15 17:49:52'], ['2024-01-16 12:16:46', '2024-01-16 15:53:14']]
+location_condition: ['company']
+attri_condition: {}
+
+policy name: p22
+user: ['Alice']
+device: ['light1']
+capability: ['light1.light']
+status_permit: True
+action_permit: True
+attri_permit: {'light1.light.switch': False}
+time_condition: [['2024-01-07 03:59:53', '2024-01-13 12:36:07']]
+location_condition: ['school']
+attri_condition: {'light1.light.color': [[271366, 570992]], 'light1.light.bright': [[99, 100]]}
+
+policy name: p23
+user: ['Alice']
+device: ['light1']
+capability: ['light1.light']
+status_permit: False
+action_permit: True
+attri_permit: {}
+time_condition: [['2024-01-13 00:20:37', '2024-01-16 23:32:38']]
+location_condition: ['any']
+attri_condition: {}
+
+policy name: p24
+user: ['Bob']
+device: ['light1']
+capability: ['light1.light']
+status_permit: False
+action_permit: False
+attri_permit: {}
+time_condition: ['any']
+location_condition: ['home']
+attri_condition: {'light1.light.switch': True}
+
+policy name: p25
+user: ['Bob']
+device: ['light1']
+capability: ['light1.light']
+status_permit: True
+action_permit: True
+attri_permit: {'light1.light.bright': [[30, 89]], 'light1.light.switch': True}
+time_condition: ['any']
+location_condition: ['any']
+attri_condition: {'light1.light.bright': [[97, 99]], 'light1.light.switch': True}
+
+policy name: p26
+user: ['Bob']
+device: ['light1']
+capability: ['light1.light']
+status_permit: False
+action_permit: True
+attri_permit: {}
+time_condition: ['any']
+location_condition: ['any']
+attri_condition: {'light1.light.bright': [[39, 98]]}
+
+policy name: p27
+user: ['Bob']
+device: ['light1']
+capability: ['light1.light']
+status_permit: False
+action_permit: False
+attri_permit: {}
+time_condition: [['2024-01-12 13:45:40', '2024-01-15 21:01:39'], ['2024-01-11 18:41:21', '2024-01-15 07:20:32']]
+location_condition: ['school']
+attri_condition: {}
+
+policy name: p28
+user: ['Alice']
+device: ['light1']
+capability: ['light1.light']
+status_permit: True
+action_permit: False
+attri_permit: {'light1.light.bright': [[14, 58]], 'light1.light.color': [[461931, 711822]]}
+time_condition: ['any']
+location_condition: ['any']
+attri_condition: {}
+
+policy name: p29
+user: ['Gary']
+device: ['light1']
+capability: ['light1.light']
+status_permit: True
+action_permit: False
+attri_permit: {'light1.light.bright': [[42, 91]], 'light1.light.switch': True}
+time_condition: [['2024-01-07 01:37:01', '2024-01-14 22:00:04']]
+location_condition: ['any']
+attri_condition: {'light1.light.switch': True, 'light1.light.color': [[374316, 582124]]}
+
+policy name: p30
+user: ['Bob']
+device: ['light1']
+capability: ['light1.light']
+status_permit: True
+action_permit: False
+attri_permit: {'light1.light.bright': [[70, 82]], 'light1.light.color': [[416541, 738051]]}
+time_condition: ['any']
+location_condition: ['any']
+attri_condition: {}
+
+policy name: p31
+user: ['Alice']
+device: ['light1']
+capability: ['light1.light']
+status_permit: True
+action_permit: True
+attri_permit: {'light1.light.switch': True}
+time_condition: [['2024-01-07 18:00:27', '2024-01-12 16:00:32'], ['2024-01-14 04:17:42', '2024-01-15 11:04:56']]
+location_condition: ['home']
+attri_condition: {'light1.light.bright': [[42, 62]]}
+
+policy name: p32
+user: ['Bob']
+device: ['light1']
+capability: ['light1.light']
+status_permit: True
+action_permit: False
+attri_permit: {'light1.light.color': [[227156, 268006]]}
+time_condition: [['2024-01-07 09:08:41', '2024-01-13 09:36:06'], ['2024-01-11 08:02:54', '2024-01-12 20:38:50']]
+location_condition: ['company']
+attri_condition: {'light1.light.switch': True}
+
+policy name: p33
+user: ['Bob']
+device: ['light1']
+capability: ['light1.light']
+status_permit: True
+action_permit: False
+attri_permit: {'light1.light.bright': [[48, 84]]}
+time_condition: ['any']
+location_condition: ['any']
+attri_condition: {'light1.light.color': [[381969, 569704]], 'light1.light.bright': [[31, 84]]}
+
+policy name: p34
+user: ['Gary']
+device: ['light1']
+capability: ['light1.light']
+status_permit: True
+action_permit: True
+attri_permit: {'light1.light.switch': False, 'light1.light.bright': [[42, 77]]}
+time_condition: [['2024-01-09 12:41:50', '2024-01-11 12:28:33']]
+location_condition: ['any']
+attri_condition: {'light1.light.color': [[582151, 637359]], 'light1.light.switch': True}
+
+policy name: p35
+user: ['Gary']
+device: ['light1']
+capability: ['light1.light']
+status_permit: False
+action_permit: False
+attri_permit: {}
+time_condition: [['2024-01-08 18:15:37', '2024-01-08 21:50:37']]
+location_condition: ['any']
+attri_condition: {}
+
+policy name: p36
+user: ['Gary']
+device: ['light1']
+capability: ['light1.light']
+status_permit: True
+action_permit: False
+attri_permit: {}
+time_condition: ['any']
+location_condition: ['any']
+attri_condition: {}
+
+policy name: p37
+user: ['Alice']
+device: ['light1']
+capability: ['light1.light']
+status_permit: True
+action_permit: True
+attri_permit: {'light1.light.switch': True, 'light1.light.color': [[597723, 655608]]}
+time_condition: ['any']
+location_condition: ['company']
+attri_condition: {'light1.light.bright': [[90, 98]]}
+
+policy name: p38
+user: ['Alice']
+device: ['light1']
+capability: ['light1.light']
+status_permit: True
+action_permit: True
+attri_permit: {'light1.light.switch': True}
+time_condition: [['2024-01-10 13:02:49', '2024-01-11 11:19:38']]
+location_condition: ['any']
+attri_condition: {}
+
+policy name: p39
+user: ['Alice']
+device: ['light1']
+capability: ['light1.light']
+status_permit: False
+action_permit: True
+attri_permit: {}
+time_condition: ['any']
+location_condition: ['any']
+attri_condition: {}
+
+policy name: p40
+user: ['Gary']
+device: ['light1']
+capability: ['light1.light']
+status_permit: False
+action_permit: False
+attri_permit: {'light1.light.bright': [[54, 82]], 'light1.light.switch': False}
+time_condition: ['any']
+location_condition: ['any']
+attri_condition: {'light1.light.switch': True, 'light1.light.color': [[294198, 628679]]}
+
+policy name: p41
+user: ['Alice']
+device: ['light1']
+capability: ['light1.light']
+status_permit: False
+action_permit: False
+attri_permit: {}
+time_condition: ['any']
+location_condition: ['any']
+attri_condition: {'light1.light.bright': [[51, 97]], 'light1.light.switch': True}
+
+policy name: p42
+user: ['Gary']
+device: ['light1']
+capability: ['light1.light']
+status_permit: False
+action_permit: True
+attri_permit: {}
+time_condition: ['any']
+location_condition: ['school']
+attri_condition: {'light1.light.switch': True, 'light1.light.bright': [[66, 73]]}
+
+policy name: p43
+user: ['Alice']
+device: ['light1']
+capability: ['light1.light']
+status_permit: True
+action_permit: True
+attri_permit: {'light1.light.switch': True}
+time_condition: [['2024-01-16 11:57:32', '2024-01-16 12:31:56'], ['2024-01-11 06:12:48', '2024-01-14 16:25:02']]
+location_condition: ['company']
+attri_condition: {'light1.light.bright': [[77, 98]]}
+
+policy name: p44
+user: ['Bob']
+device: ['light1']
+capability: ['light1.light']
+status_permit: True
+action_permit: False
+attri_permit: {}
+time_condition: [['2024-01-08 13:27:15', '2024-01-11 15:43:32'], ['2024-01-14 04:40:45', '2024-01-14 10:45:42']]
+location_condition: ['school']
+attri_condition: {'light1.light.switch': True}
+
+policy name: p45
+user: ['Gary']
+device: ['light1']
+capability: ['light1.light']
+status_permit: False
+action_permit: True
+attri_permit: {'light1.light.switch': True, 'light1.light.color': [[323303, 466767]]}
+time_condition: [['2024-01-14 16:16:50', '2024-01-15 13:21:10']]
+location_condition: ['company']
+attri_condition: {'light1.light.switch': True, 'light1.light.color': [[245094, 297627]]}
+
+policy name: p46
+user: ['Bob']
+device: ['light1']
+capability: ['light1.light']
+status_permit: False
+action_permit: True
+attri_permit: {'light1.light.color': [[596635, 731544]], 'light1.light.switch': False}
+time_condition: ['any']
+location_condition: ['any']
+attri_condition: {}
+
+policy name: p47
+user: ['Gary']
+device: ['light1']
+capability: ['light1.light']
+status_permit: True
+action_permit: True
+attri_permit: {}
+time_condition: ['any']
+location_condition: ['any']
+attri_condition: {}
+
+policy name: p48
+user: ['Bob']
+device: ['light1']
+capability: ['light1.light']
+status_permit: True
+action_permit: False
+attri_permit: {}
+time_condition: ['any']
+location_condition: ['company']
+attri_condition: {}
+
+policy name: p49
+user: ['Alice']
+device: ['light1']
+capability: ['light1.light']
+status_permit: False
+action_permit: False
+attri_permit: {'light1.light.bright': [[42, 48]]}
+time_condition: ['any']
+location_condition: ['any']
+attri_condition: {'light1.light.color': [[393138, 573922]], 'light1.light.bright': [[26, 79]]}
+

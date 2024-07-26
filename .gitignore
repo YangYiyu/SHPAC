@@ -1,0 +1,11 @@
+.vs/
+.vscode/
+__pycache__/
+script/
+HookScript_bk.js
+HookTest1.js
+HookTest2.js
+HookTest3.js
+policy.json
+*.bk
+test.py

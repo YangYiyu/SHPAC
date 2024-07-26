@@ -1,0 +1,117 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>ShangYang</title>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/themes/gray/easyui.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/themes/icon.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/themes/color.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/default.css') }}">
+        <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.easyui.min.js') }}"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='js/locale/easyui-lang-zh_CN.js') }}"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='js/leftmenu.js') }}"></script>
+        <style>
+            .panel-title {
+                font-size: 14px;
+            }
+            .datagrid-header .datagrid-cell span {
+                font-size: 14px;
+            }
+            .tree-title{
+                height: 18px;
+                line-height: 18px;
+                font-size: 14px;
+            }
+            .datagrid-cell, .datagrid-cell-group, .datagrid-header-rownumber, .datagrid-cell-rownumber {
+                height: 18px;
+                line-height: 18px;
+                font-size: 14px;
+            }
+            .l-btn-text {
+                line-height: 24px;
+                font-size: 14px;
+            }
+        </style>
+    </head>
+    <body class="easyui-layout" style="overflow-y: hidden" scroll="no">
+        <div region="north" split="true" border="false" style="overflow:hidden;height:55px;">
+            <div style="font-size:16px;font-weight:bold;padding:15px 0px;">
+                <span style="padding-left: 20px;"></span>
+                Smart Home App:&nbsp;
+                <input class="easyui-combobox" id="app" panelHeight="auto" data-options="editable:false" style="width:160px;">
+                <span style="padding-left: 30px;"></span>
+            </div>
+        </div>
+        <div region="west" split="true" title="Menu" style="width:220px;" id="west">
+            <div id="leftmenu" class="easyui-accordion" fit="true" border="false">
+                <div title="Manage Capability" data-options="iconCls:'icon-sys'" style="overflow:auto;">
+                    <ul>
+                        <li><div><a target="mainFrame" way="/AppBasePage" ><span class="icon icon-nav" >&nbsp;</span>Platform</a></div></li>
+                        <li><div><a target="mainFrame" way="/DeviceBasePage" ><span class="icon icon-nav" >&nbsp;</span>Device</a></div></li>
+                        <li><div><a target="mainFrame" way="/CapabilityBasePage" ><span class="icon icon-nav" >&nbsp;</span>Capability</a></div></li>
+                        <li><div><a target="mainFrame" way="/AttributeBasePage" ><span class="icon icon-nav" >&nbsp;</span>Attribute</a></div></li>
+                        <li><div><a target="mainFrame" way="/XpathConfigPage" ><span class="icon icon-nav" >&nbsp;</span>Xpath</a></div></li>
+                        <li><div><a target="mainFrame" way="/ScriptBasePage" ><span class="icon icon-nav" >&nbsp;</span>Script</a></div></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- 中间 主界面 -->
+        <div id="mainPanle" region="center" style="background: #eee; overflow:hidden;">
+            <div id="tabs" class="easyui-tabs"  fit="true" border="false">
+            </div>
+        </div>
+    </body>
+    <script type="text/javascript">
+        function doHook(){
+            var app = $('#app').combobox('getText');
+            var pkg = $('#app').combobox('getValue');
+
+            if(!app) {
+                $.messager.alert('hint', 'Please choose app!', 'info');
+                return;
+            }
+
+            var mode = getRadioCheckedValue("hookmode");
+            if(!mode) {
+                $.messager.alert('hint', 'Please choose hook mode!', 'info');
+                return;
+            }
+
+            $.post('hookapp', {appname: app, pkgname: pkg, hookmode: mode}, function(data, status){
+                if(data && data.msg=='success') {
+                    $('#statushook').html('running');
+                    $.messager.alert('hint', 'Hook successfully!', 'info');
+                }
+                else {
+                    $.messager.alert('hint', data.msg, 'info');
+                }
+            });
+        }
+        function doStopTrace(){
+            $.get('gethookstatus',{},function(data, status){
+                if(data && data=='running') {
+                    $.post('stoptrace', {}, function(data, status){
+                        if(data && data.msg=='success') {
+                            $.messager.alert('hint', 'Tracing stopped', 'info');
+                            return;
+                        }
+                        else {
+                            $.messager.alert('hint', 'Stop tracing failed!', 'info');
+                            return;
+                        }
+                    });
+                }
+                else {
+                    $.messager.alert('hint', 'The hook is not running!', 'info');
+                }
+            });
+        }
+        $(function() {
+            iniAccordion();
+        });
+    </script>
+</html>

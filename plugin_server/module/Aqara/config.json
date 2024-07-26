@@ -1,0 +1,69 @@
+{
+    "modulename": "Aqara",
+    "platform": "Aqara",
+    "package": "com.lumiunited.aqarahome.play",
+    "activity": "com.lumiunited.aqara.main.MainActivity",
+    "deviceList": [
+        {
+            "device": "gateway",
+            "description": "Aqara gateway M1S",
+            "capabilityList": [
+                {
+                    "capability": "light",
+                    "attribute": [
+                        {
+                            "name": "switch",
+                            "control": "switchbutton"
+                        },
+                        {
+                            "name": "color",
+                            "control": "colorpicker"
+                        },
+                        {
+                            "name": "bright",
+                            "control": "numberslider"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "device": "LED Bulb",
+            "description": "Aqara LED Bulb",
+            "capabilityList": [
+                {
+                    "capability": "switch",
+                    "attribute": [
+                        {
+                            "name": "switch",
+                            "control": "switchbutton"
+                        }
+                    ]
+                },
+                {
+                    "capability": "brightness",
+                    "attribute": [
+                        {
+                            "name": "brightness",
+                            "control": "numberslider"
+                        }
+                    ]
+                },
+                {
+                    "capability": "colortemperature",
+                    "attribute": [
+                        {
+                            "name": "colortemperature",
+                            "control": "numberslider"
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "script": [
+        {"file": "action_script"},
+        {"file": "status_script"}
+    ],
+    "version": "1.0"
+}

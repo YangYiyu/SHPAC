@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Smart Home AC</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/themes/metro/easyui.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/themes/mobile.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/themes/icon.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/themes/color.css') }}">
+	<script type="text/javascript" src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='js/jquery.easyui.min.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.easyui.mobile.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.color.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/socketio/socket.io.js') }}"></script>
+  </head>
+  <body>
+    <div class="easyui-tabs" data-options="fit:true,border:false,pill:true,justified:true,tabWidth:80,tabHeight:35">
+		<div title="Aqara" style="padding:10px">
+            <div class="easyui-accordion" fit="true" border="false">
+                <div title="Gateway">
+                    <div class="easyui-navpanel">
+                        <ul class="m-list">
+                            <li class="m-list-group">light</li>
+                            <li>
+                                <span>switch status: </span>
+                                <span id="Aqara_gateway_light_switch_status" style="padding-left:10px;">unknown</span>
+                                <div class="m-right">
+                                    <a id="Aqara_gateway_light_switch" href="#" class="easyui-linkbutton c1" style="width:100px;height:30px;line-height:30px;"></a>
+                                </div>
+                            </li>
+                            <li>
+                                <span>color status: </span>
+                                <span id="Aqara_gateway_light_color_status" style="padding-left:10px;">unknown</span>
+                                <div style="padding-top:5px;">
+                                    <input id="Aqara_gateway_light_color" type="text" class="easyui-color" style="width:100px;height:30px;line-height:30px;">
+                                </div>
+                                <span>bright status: </span>
+                                <span id="Aqara_gateway_light_bright_status" style="padding-left:10px;">unknown</span>
+                                <div style="padding-top:5px;">  
+                                    <input id="Aqara_gateway_light_bright" class="easyui-slider" value="0" style="width:300px" data-options="">
+                                </div>
+                            </li>
+                            <li class="m-list-group">feature</li>
+                            <li>
+                                
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div title="Ajax" href="_content.html" style="padding:10px"></div>
+            </div>
+		</div>
+		<div title="Mihome" style="padding:10px">
+            <ul class="m-list">
+                <li>
+                    <span>Network</span>
+                    <div class="m-right"><input class="easyui-switchbutton" checked></div>
+                </li>
+
+            </ul>
+		</div>
+	</div>
+
+    <div id="loadingDlg" class="easyui-dialog" style="width:60%;padding:10px;" data-options="inline:true,modal:true,closed:true,title:'please waitting ...'">
+        <div style="text-align:center;"><img src="{{ url_for('static', filename='images/loading.gif') }}"></div>
+    </div>
+
+	<style scoped>
+		p {
+			line-height:150%;
+		}
+	</style>
+    <script type="text/javascript">
+        var socket = null;
+        $(document).ready(function(){
+            socket = io.connect("http://" + document.domain + ":" + location.port + "?username=123456");
+        });
+    </script>
+    <script type="text/javascript">
+        // 开关按钮改变状态
+        function setLinkBtnStatus(id, status) {
+            var btn = $(`#${id}`);
+            var label = $(`#${id}_status`);
+            if(btn) {
+                if(status=="off") {
+                    if(btn.hasClass("easyui-linkbutton c3") || btn.html()=="") {
+                        btn.removeClass("easyui-linkbutton c3");
+                        btn.addClass("easyui-linkbutton c1");
+                        btn.html("turn on");
+                    }
+                    if(label) {
+                        label.html("off");
+                    }
+                }
+                else if(status=="on") {
+                    if(btn.hasClass("easyui-linkbutton c1")) {
+                        btn.removeClass("easyui-linkbutton c1");
+                        btn.addClass("easyui-linkbutton c3");
+                        btn.html("turn off");
+                    }
+                    if(label) {
+                        label.html("on");
+                    }
+                }
+            }
+        }
+        $(document).ready(function(){
+            socket.on("Aqara_gateway_light_switch_status", function(msg) {
+                var msgarr = msg.split("=");
+                if(msgarr[1]=="1") {
+                    setLinkBtnStatus(msgarr[0], "on");
+                }
+                else if(msgarr[1]=="0") {
+                    setLinkBtnStatus(msgarr[0], "off");
+                }
+                // else {
+                //     alert("Illegal status!");
+                // }
+            });
+            $.post("getCapabilityStatus", {platform:"Aqara",device:"gateway",capability:"light",attribute:"switch"}, function(data, status){
+                if(data=="1") {
+                    setLinkBtnStatus("Aqara_gateway_light_switch", "off");
+                }
+                else if(data=="0") {
+                    setLinkBtnStatus("Aqara_gateway_light_switch", "on");
+                }
+                // else {
+                //     alert("Illegal status!");
+                // }
+            });
+            $("#Aqara_gateway_light_switch").click(function() {
+                var btn = $("#Aqara_gateway_light_switch");
+                if(btn.hasClass("easyui-linkbutton c1")) {
+                    // btn.removeClass("easyui-linkbutton c1");
+                    // btn.addClass("easyui-linkbutton c3");
+                    // btn.html("turn off");
+                    $("#loadingDlg").dialog("open").dialog("center");
+                    $.post("doAction", {platform:"Aqara",device:"gateway",capability:"light",attribute:"switch",value:"1"}, function(data,status){
+                        if(data && data=="success") {
+                            // $.messager.alert("hint", "Success!", "info");
+                            $("#loadingDlg").dialog("close");
+                        }
+                    });
+                }
+                else if(btn.hasClass("easyui-linkbutton c3")) {
+                    // btn.removeClass("easyui-linkbutton c3");
+                    // btn.addClass("easyui-linkbutton c1");
+                    // btn.html("turn on");
+                    $("#loadingDlg").dialog("open").dialog("center");
+                    $.post("doAction", {platform:"Aqara",device:"gateway",capability:"light",attribute:"switch",value:"0"}, function(data,status){
+                        if(data && data=="success") {
+                            // $.messager.alert("hint", "Success!", "info");
+                            $("#loadingDlg").dialog("close");
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+    <script type="text/javascript">
+        // 颜色按钮改变状态
+        function setColorLabelStatus(id, status) {
+            var label = $(`#${id}_status`);
+            if(label) {
+                label.html(status);
+                label.css("background-color", status);
+            }
+        }
+        $(document).ready(function(){
+            socket.on("Aqara_gateway_light_color_status", function(msg) {
+                var msgarr = msg.split("=");
+                if(msgarr) {
+                    setColorLabelStatus(msgarr[0], msgarr[1]);
+                }
+            });
+            $.post('getCapabilityStatus', {platform:"Aqara",device:"gateway",capability:"light",attribute:"color"}, function(data, status){
+                if(data) {
+                    setColorLabelStatus("Aqara_gateway_light_color", data);
+                }
+            });
+            $("#Aqara_gateway_light_color").combo({
+                onChange: function(val) {
+                    $("#loadingDlg").dialog("open").dialog("center");
+                    $.post("doAction", {platform:"Aqara",device:"gateway",capability:"light",attribute:"color",value:val}, function(data,status){
+                        if(data && data=="success") {
+                            $("#loadingDlg").dialog("close");
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+    <script type="text/javascript">
+        // 亮度按钮改变状态
+        function setSliderLabelStatus(id, status) {
+            var label = $(`#${id}_status`);
+            if(label) {
+                label.html(status);
+            }
+            $(`#${id}`).slider("setValue", status);
+        }
+        $(document).ready(function(){
+            socket.on("Aqara_gateway_light_bright_status", function(msg) {
+                var msgarr = msg.split("=");
+                if(msgarr) {
+                    setSliderLabelStatus(msgarr[0], msgarr[1]);
+                }
+            });
+            $.post('getCapabilityStatus', {platform:"Aqara",device:"gateway",capability:"light",attribute:"bright"}, function(data, status){
+                if(data) {
+                    setSliderLabelStatus("Aqara_gateway_light_bright", data);
+                }
+            });
+            $("#Aqara_gateway_light_bright").slider({
+                onComplete: function(val) {
+                    $("#loadingDlg").dialog("open").dialog("center");
+                    $.post("doAction", {platform:"Aqara",device:"gateway",capability:"light",attribute:"bright",value:val}, function(data,status){
+                        if(data && data=="success") {
+                            $("#loadingDlg").dialog("close");
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+  </body>
+</html>
